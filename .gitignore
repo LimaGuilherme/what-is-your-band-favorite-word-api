@@ -1,0 +1,16 @@
+*.py[cod]
+.Python
+.k_coverage/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+
+temp_files/
+cache_folder/
+dev/
+.idea/
+.env
+.env.deploy
+.Rhistory
