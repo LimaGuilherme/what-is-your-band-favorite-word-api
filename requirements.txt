@@ -2,7 +2,6 @@ Flask==1.1.2
 Flask-RESTful==0.3.8
 gunicorn==19.10.0
 PyLyrics==1.1.0
-BeautifulSoup==3.2.2
 beautifulsoup4==4.9.1
 lxml==4.5.1
 requests==2.24.0

@@ -12,7 +12,6 @@
      $ mkvirtualenv -p python3 band-favorite-word-api
      $ workon band-favorite-word-api
      $ pip install -r requirements.txt
-     $ pip install -r requirements_dev.txt
      
      Dealing with environments variables
 
@@ -30,7 +29,7 @@
     $ load-env
     
 
-# Dependencies #1
+# Dependencies #1 - ElasticSearch Index
 
     Assuming you alredy have ElasticSearch and Kibana running. Create the Index below:
 
@@ -78,12 +77,6 @@
                 "type_as_payload",
                 "custom_stop_words"
               ]
-            }
-          },
-          "filter": {
-            "custom_stop_words": {
-              "type": "stop",
-              "stopwords": "_english_"
             }
           }
         }

@@ -20,3 +20,7 @@ class RepositoryError(Exception):
 
 class ConfigClassNotFound(Exception):
     pass
+
+
+class AlbumNotFound(Exception):
+    pass
