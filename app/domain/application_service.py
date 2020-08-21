@@ -1,3 +1,5 @@
+from typing import List
+
 import spotipy
 import urllib
 import requests
@@ -12,32 +14,36 @@ from app import exceptions
 
 class Lyrics(object):
     
-    def __init__(self, artist, album, track, lyrics):
+    def __init__(self, artist, album, track, lyrics, lyric_id=None):
+        self.id = lyric_id
         self.artist = artist
         self.album = album
         self.track = track
         self.lyrics = lyrics
 
 
-class IndexerService(object):
-    repository = None
+class ArtistService(object):
 
-    def __init__(self, artist):
-        self.artist = artist
+    def __init__(self, lyrics_searcher, statistic, repository):
         self.lyrics_searcher = lyrics_searcher
-        self.albums = None
+        self.statistic = statistic
+        self.lyrics_repository = repository
 
-    def index(self):
-        _lyrics = self.lyrics_searcher.get_lyrics_from(self.artist)
-        for lyrics in _lyrics:
-            self.repository.save(lyrics)
+    def count_frequency(self, artist):
+        lyrics_list = self.lyrics_repository.get_by_artist(artist)
+        return self.statistic.count_words_frequency(lyrics_list)
+
+    def index(self, artist):
+        lyrics_list = self.lyrics_searcher.get_lyrics(artist)
+        for lyrics in lyrics_list:
+            self.lyrics_repository.save(lyrics)
 
 
 class LyricsSearcher(object):
 
-    def __init__(self, artist, album_tracks):
-        self.__artist = artist
-        self.__album_tracks = album_tracks
+    def __init__(self, albums_searcher, track_searcher):
+        self.albums_searcher = albums_searcher
+        self.track_searcher = track_searcher
 
     def lyricsTransformCase(self, s):
         words = s.split()
@@ -89,28 +95,39 @@ class LyricsSearcher(object):
                 _lyrics.append(node.tail)
         return "".join(_lyrics).strip()
 
-    def get_lyrics(self):
+    def get_lyrics(self, artist: str) -> List[Lyrics]:
+        albums = self.albums_searcher.get_albums(artist)
+        # albums = self.albums_searcher.remove_remaster_and_live_albums(albums)
+        albums_to_tracks = {}
         track_lyrics = []
-        for album, tracks in self.__album_tracks.items():
+
+        for album in albums:
+            try:
+                if not albums_to_tracks.get(album):
+                    albums_to_tracks[album] = []
+                albums_to_tracks[album] = self.track_searcher.get_album_tracks(album)
+            except:
+                continue
+
+        for album, tracks in albums_to_tracks.items():
             for track in tracks:
                 try:
-                    lyric = self.noname(self.__artist, track)
-                except:
+                    lyric = self.noname(artist, track)
+                    if lyric:
+                        track_lyrics.append(Lyrics(artist=artist, album=album, track=track, lyrics=lyric))
+                except Exception as ex:
                     continue
-                if lyric:
-                    track_lyrics.append({'artist': self.__artist, 'album': album, 'track': track, 'lyric': lyric})
         return track_lyrics
 
 
 class TrackSearcher(object):
 
-    def __init__(self, albums):
-        self.__albums = albums
+    def __init__(self):
         client_credentials_manager = SpotifyClientCredentials(client_id='f048a48923d64486a1e4f4e76921e1c1',
                                                               client_secret='52a4fad0604c447fa4f6d07827ec5d62')
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-    def __get_album_tracks(self, album):
+    def get_album_tracks(self, album):
         album_tracks = []
 
         results = self.__spotify_client.search(q="album:" + album, type="album")
@@ -124,32 +141,25 @@ class TrackSearcher(object):
             album_tracks.append(track["name"])
         return album_tracks
 
-    def get_album_tracks(self):
-        album_tracks = {}
-        for album in self.__albums:
-            try:
-                album_tracks[album] = self.__get_album_tracks(album)
-            except Exception as ex:
-                pass
-        return album_tracks
-
 
 class AlbumsSearcher(object):
 
-    def __init__(self, artist):
-        self.artist = artist
+    def __init__(self):
         client_credentials_manager = SpotifyClientCredentials(client_id='f048a48923d64486a1e4f4e76921e1c1',
                                                               client_secret='52a4fad0604c447fa4f6d07827ec5d62')
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-    def get_albums(self):
-        results = self.__spotify_client.search(q="artist:" + self.artist, type="artist")
+    def remove_remaster_and_live_albums(self, albums):
+        pass
+
+    def get_albums(self, artist):
+        results = self.__spotify_client.search(q="artist:" + artist, type="artist")
         items = results["artists"]["items"]
-        artist = items[0]
+        artist_item = items[0]
 
         albums = []
         albums_titles = []
-        results = self.__spotify_client.artist_albums(artist["id"], album_type="album")
+        results = self.__spotify_client.artist_albums(artist_item["id"], album_type="album")
         albums.extend(results["items"])
         while results["next"]:
             results = self.__spotify_client.next(results)
@@ -167,11 +177,15 @@ class AlbumsSearcher(object):
 
 
 if __name__ == '__main__':
-    albums_searcher = AlbumsSearcher('Behemoth')
-    track_searcher = TrackSearcher(albums_searcher.get_albums())
-    lyrics_searcher = LyricsSearcher('Behemoth', track_searcher.get_album_tracks())
-    lyrics = lyrics_searcher.get_lyrics()
+    albums_searcher = AlbumsSearcher()
+
+    track_searcher = TrackSearcher()
+
+    lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher)
+
+    lyrics = lyrics_searcher.get_lyrics('Behemoth')
+    # lyrics = [{'artist': 'artist', 'album': 'album', 'track': 'track', 'lyric': 'lyric'}]
     for lyric in lyrics:
-        lyrics_what = Lyrics(**lyric)
+        lyrics_what = Lyrics(*lyric)
 
 

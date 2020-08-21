@@ -20,8 +20,6 @@ class Config(object):
     def __init__(self):
         if self.ENVIRONMENT is None:
             raise TypeError('You should use one of the specialized config class')
-        self.SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
-        self.REDIS_URL = os.environ['REDIS_URL']
 
 
 class ProductionConfig(Config):

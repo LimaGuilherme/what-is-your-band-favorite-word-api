@@ -92,7 +92,7 @@ class ResourceBase(Resource):
         return {'result': 'error', 'error': 'General Error', 'exception': str(exception)}, 500
 
     def return_artist_not_send(self, exception=None):
-        return {'result': 'error', 'error': 'Artist Not Recived', 'exception': str(exception)}, 400
+        return {'result': 'error', 'error': 'Artist Not Received', 'exception': str(exception)}, 400
 
     def return_bad_request(self, exception=None):
         return {'result': 'error', 'error': 'Bad Request', 'exception': str(exception)}, 400
@@ -103,18 +103,24 @@ class ResourceBase(Resource):
 
 class ArtistResource(ResourceBase):
 
+    def __init__(self, artist_service):
+        self.artist_service = artist_service
+
     def get(self, artist):
         if artist:
-            return self.return_ok()
+            words_frequency = self.artist_service.count_frequency(artist)
+            return self.response({'words_frequency': words_frequency})
         return self.return_artist_not_send()
 
     @not_allowed
     def delete(self, something_id):
         pass
 
-    @not_allowed
-    def post(self):
-        pass
+    def post(self, artist):
+        if artist:
+            self.artist_service.index(artist)
+            return self.return_ok()
+        return self.return_artist_not_send()
 
     @not_allowed
     def put(self, something_id):
