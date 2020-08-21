@@ -174,18 +174,3 @@ class AlbumsSearcher(object):
                 seen.add(album_tittle)
                 albums_titles.append(album_tittle)
         return albums_titles
-
-
-if __name__ == '__main__':
-    albums_searcher = AlbumsSearcher()
-
-    track_searcher = TrackSearcher()
-
-    lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher)
-
-    lyrics = lyrics_searcher.get_lyrics('Behemoth')
-    # lyrics = [{'artist': 'artist', 'album': 'album', 'track': 'track', 'lyric': 'lyric'}]
-    for lyric in lyrics:
-        lyrics_what = Lyrics(*lyric)
-
-
