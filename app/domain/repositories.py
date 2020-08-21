@@ -1,8 +1,9 @@
+
 import elasticsearch
 import elasticsearch_dsl
 
-from app.domain.stop_words.english import STOP_WORDS
-from app.domain.application_service import Lyrics
+from typing import List
+from app.domain.entity import Lyrics
 
 
 class ElasticSearchRepository(object):
@@ -10,7 +11,7 @@ class ElasticSearchRepository(object):
     def __init__(self, elastic_search_connection):
         self.__elastic_search_connection = elastic_search_connection
 
-    def save(self, lyrics):
+    def save(self, lyrics: Lyrics) -> None:
         lyrics_document = ESLyricsDocument(artist=lyrics.artist, lyrics=lyrics.lyrics, track=lyrics.track, album=lyrics.album)
         try:
             lyrics_document.save()
@@ -18,9 +19,8 @@ class ElasticSearchRepository(object):
             return str(ex)
         except Exception as ex:
             return str(ex)
-        return lyrics
 
-    def get_by_artist(self, artist):
+    def get_by_artist(self, artist: str) -> List[Lyrics]:
         lyrics_list = []
         searcher = ESLyricsDocument.search().query("match", artist=artist).params(size=1000, timeout='150s')
         es_result = searcher.execute()
@@ -47,5 +47,3 @@ class ESLyricsDocument(elasticsearch_dsl.DocType):
 
     class Meta:
         doc_type = '_doc'
-
-

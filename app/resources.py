@@ -112,15 +112,15 @@ class ArtistResource(ResourceBase):
             return self.response({'words_frequency': words_frequency})
         return self.return_artist_not_send()
 
-    @not_allowed
-    def delete(self, something_id):
-        pass
-
     def post(self, artist):
         if artist:
             self.artist_service.index(artist)
             return self.return_ok()
         return self.return_artist_not_send()
+
+    @not_allowed
+    def delete(self, something_id):
+        pass
 
     @not_allowed
     def put(self, something_id):

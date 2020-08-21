@@ -1,25 +1,15 @@
-from typing import List
-
 import spotipy
 import urllib
 import requests
 import lxml.html
 
+from io import BytesIO
+from typing import List
 from spotipy.oauth2 import SpotifyClientCredentials
-from io import StringIO, BytesIO
 
 
 from app import exceptions
-
-
-class Lyrics(object):
-    
-    def __init__(self, artist, album, track, lyrics, lyric_id=None):
-        self.id = lyric_id
-        self.artist = artist
-        self.album = album
-        self.track = track
-        self.lyrics = lyrics
+from app.domain.entity import Lyrics
 
 
 class ArtistService(object):
@@ -29,11 +19,11 @@ class ArtistService(object):
         self.statistic = statistic
         self.lyrics_repository = repository
 
-    def count_frequency(self, artist):
+    def count_frequency(self, artist: str) -> List:
         lyrics_list = self.lyrics_repository.get_by_artist(artist)
         return self.statistic.count_words_frequency(lyrics_list)
 
-    def index(self, artist):
+    def index(self, artist: str) -> None:
         lyrics_list = self.lyrics_searcher.get_lyrics(artist)
         for lyrics in lyrics_list:
             self.lyrics_repository.save(lyrics)
@@ -45,7 +35,7 @@ class LyricsSearcher(object):
         self.albums_searcher = albums_searcher
         self.track_searcher = track_searcher
 
-    def lyricsTransformCase(self, s):
+    def lyrics_transform_case(self, s: str) -> str:
         words = s.split()
         new_words = []
         for word in words:
@@ -53,7 +43,7 @@ class LyricsSearcher(object):
         s = "_".join(new_words)
         s = s.replace("<", "Less_Than")
         s = s.replace(">", "Greater_Than")
-        s = s.replace("#", "Number_")  # FIXME: "Sharp" is also an allowed substitution
+        s = s.replace("#", "Number_")
         s = s.replace("[", "(")
         s = s.replace("]", ")")
         s = s.replace("{", "(")
@@ -66,10 +56,10 @@ class LyricsSearcher(object):
             s = urllib
         return s
 
-    def noname(self, artist, title):
+    def noname(self, artist: str, title: str) -> str:
         try:
             base_url = "https://lyrics.wikia.com/"
-            page_name = '{}:{}'.format(self.lyricsTransformCase(artist), self.lyricsTransformCase(title))
+            page_name = '{}:{}'.format(self.lyrics_transform_case(artist), self.lyrics_transform_case(title))
             url = base_url + page_name
             response = requests.get(url)
             doc = lxml.html.parse(BytesIO(response.content), base_url=url)
@@ -127,7 +117,7 @@ class TrackSearcher(object):
                                                               client_secret='52a4fad0604c447fa4f6d07827ec5d62')
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-    def get_album_tracks(self, album):
+    def get_album_tracks(self, album: str) -> List:
         album_tracks = []
 
         results = self.__spotify_client.search(q="album:" + album, type="album")
@@ -149,10 +139,10 @@ class AlbumsSearcher(object):
                                                               client_secret='52a4fad0604c447fa4f6d07827ec5d62')
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-    def remove_remaster_and_live_albums(self, albums):
+    def remove_remaster_and_live_albums(self, albums: list) -> List:
         pass
 
-    def get_albums(self, artist):
+    def get_albums(self, artist: str) -> List:
         results = self.__spotify_client.search(q="artist:" + artist, type="artist")
         items = results["artists"]["items"]
         artist_item = items[0]
