@@ -4,7 +4,7 @@ import elasticsearch
 
 from flask_restful import Api
 from app import resources
-from app.domain.application_service import AlbumsSearcher, TrackSearcher, LyricsSearcher, ArtistService
+from app.domain.application_service import AlbumsSearcher, TrackSearcher, LyricsSearcher, ArtistLyricsService
 from app.domain.repositories import ElasticSearchRepository
 
 from elasticsearch_dsl.connections import connections
@@ -23,7 +23,7 @@ lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher)
 elastic_searcher_repository = ElasticSearchRepository(elasticsearch_connection)
 statistic = ESStaticsCount(elasticsearch_connection)
 
-artist_service = ArtistService(lyrics_searcher, statistic, elastic_searcher_repository)
+artist_service = ArtistLyricsService(lyrics_searcher, statistic, elastic_searcher_repository)
 
 
 def create_api(app):

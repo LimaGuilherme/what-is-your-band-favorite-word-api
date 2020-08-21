@@ -1,7 +1,7 @@
 from typing import List
 
 from app.domain.entity import Lyrics
-from app.domain.stop_words.english import STOP_WORDS
+from app.domain.stop_words import STOP_WORDS
 
 
 class ESStaticsCount(object):

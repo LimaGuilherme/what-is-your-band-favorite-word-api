@@ -22,5 +22,5 @@ class ConfigClassNotFound(Exception):
     pass
 
 
-class AlbumNotFound(Exception):
+class AlbumsNotFound(Exception):
     pass
