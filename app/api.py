@@ -5,16 +5,18 @@ import elasticsearch
 from flask_restful import Api
 from elasticsearch_dsl.connections import connections
 from app import resources
+from app import config as config_module
 
 from app.domain.application_service import  ArtistLyricsService
 from app.domain.repositories import ElasticSearchRepository
 from app.domain.searchers import AlbumsSearcher, TrackSearcher, LyricsSearcher
 from app.domain.statitics import ESStaticsCount
 
+config = config_module.get_config()
 
 elasticsearch_connection = connections.create_connection(
-    hosts=[{'host': 'localhost', 'port': 9200}],
-    use_ssl=False,
+    hosts=[{'host': config.ELASTICSEARCH_HOST, 'port': config.ELASTICSEARCH_PORT}],
+    use_ssl=config.ELASTICSEARCH_USE_SSL,
     verify_certs=False,
     connection_class=elasticsearch.RequestsHttpConnection)
 

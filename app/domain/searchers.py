@@ -9,7 +9,10 @@ from spotipy.oauth2 import SpotifyClientCredentials
 
 
 from app import exceptions
+from app import config as config_module
 from app.domain.entity import Lyrics
+
+config = config_module.get_config()
 
 
 class LyricsSearcher(object):
@@ -98,8 +101,8 @@ class LyricsSearcher(object):
 class TrackSearcher(object):
 
     def __init__(self):
-        client_credentials_manager = SpotifyClientCredentials(client_id='f048a48923d64486a1e4f4e76921e1c1',
-                                                              client_secret='52a4fad0604c447fa4f6d07827ec5d62')
+        client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID,
+                                                              client_secret=config.SPOTIFY_CLIENT_SECRET)
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
     def get_album_tracks(self, album: str) -> List:
@@ -120,8 +123,8 @@ class TrackSearcher(object):
 class AlbumsSearcher(object):
 
     def __init__(self):
-        client_credentials_manager = SpotifyClientCredentials(client_id='f048a48923d64486a1e4f4e76921e1c1',
-                                                              client_secret='52a4fad0604c447fa4f6d07827ec5d62')
+        client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID,
+                                                              client_secret=config.SPOTIFY_CLIENT_SECRET)
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
     def remove_remaster_and_live_albums(self, albums: list) -> List:

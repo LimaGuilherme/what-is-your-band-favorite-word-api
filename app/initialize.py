@@ -21,4 +21,4 @@ def add_cache_header(response):
 
 
 def run():
-    web_app.run(host='0.0.0.0', port=int(os.environ.get('PORTA', 6669)), debug=True)
+    web_app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 6669)), debug=True)
