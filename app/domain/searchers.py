@@ -130,6 +130,8 @@ class AlbumsSearcher(object):
     def get_albums(self, artist: str) -> List:
         results = self.__spotify_client.search(q="artist:" + artist, type="artist")
         items = results["artists"]["items"]
+        if not items:
+            raise exceptions.AlbumsNotFound
         artist_item = items[0]
 
         albums = []

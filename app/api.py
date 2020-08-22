@@ -3,13 +3,14 @@
 import elasticsearch
 
 from flask_restful import Api
-from app import resources
-from app.domain.application_service import AlbumsSearcher, TrackSearcher, LyricsSearcher, ArtistLyricsService
-from app.domain.repositories import ElasticSearchRepository
-
 from elasticsearch_dsl.connections import connections
+from app import resources
 
+from app.domain.application_service import  ArtistLyricsService
+from app.domain.repositories import ElasticSearchRepository
+from app.domain.searchers import AlbumsSearcher, TrackSearcher, LyricsSearcher
 from app.domain.statitics import ESStaticsCount
+
 
 elasticsearch_connection = connections.create_connection(
     hosts=[{'host': 'localhost', 'port': 9200}],
