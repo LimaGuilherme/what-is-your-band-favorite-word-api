@@ -119,27 +119,9 @@ class ArtistResource(ResourceBase):
         return self.return_artist_not_send()
 
     @not_allowed
-    def delete(self, something_id):
-        pass
-
-    @not_allowed
-    def put(self, something_id):
-        pass
-
-
-class HealthCheckResource(ResourceBase):
-
-    def get(self):
-        return self.response({'yes': 'i am ok'})
-
-    @not_allowed
-    def post(self):
+    def delete(self):
         pass
 
     @not_allowed
     def put(self):
-        pass
-
-    @not_allowed
-    def delete(self):
         pass
