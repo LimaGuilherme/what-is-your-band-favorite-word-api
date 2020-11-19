@@ -5,6 +5,8 @@
     Virtualenvwrapper (Optional but highly recommended)
     Elasticsearch 6.8
     
+    Linux
+    Docker 
        
  # Installing
  
