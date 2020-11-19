@@ -16,7 +16,9 @@ class ESStaticsCount(object):
         for lyrics in lyrics_list:
             docs_ids.append(str(lyrics.id))
 
-        es_result = self.__elastic_search_connection.mtermvectors(index='lyrics', doc_type='_doc', ids=docs_ids,
+        es_result = self.__elastic_search_connection.mtermvectors(index='lyrics',
+                                                                  doc_type='_doc',
+                                                                  ids=docs_ids,
                                                                   fields=['lyrics'],
                                                                   field_statistics=False,
                                                                   term_statistics=False,

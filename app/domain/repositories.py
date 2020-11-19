@@ -1,6 +1,7 @@
 
 import elasticsearch
-import elasticsearch_dsl
+from app import exceptions
+from elasticsearch_dsl import Document, Text
 
 from typing import List
 from app.domain.entity import Lyrics
@@ -16,8 +17,10 @@ class ElasticSearchRepository(object):
         try:
             lyrics_document.save()
         except elasticsearch.TransportError as ex:
+            print('transport', ex)
             return str(ex)
         except Exception as ex:
+            print('ex generica', ex)
             return str(ex)
 
     def get_by_artist(self, artist: str) -> List[Lyrics]:
@@ -31,19 +34,17 @@ class ElasticSearchRepository(object):
                                       lyrics_document['_source']['lyrics'],
                                       lyrics_document['_id'])
                                )
+        if not lyrics_list:
+            raise exceptions.LyricsNotFound
         return lyrics_list
 
 
-class ESLyricsDocument(elasticsearch_dsl.DocType):
+class ESLyricsDocument(Document):
 
-    artist = elasticsearch_dsl.Text()
-    lyrics = elasticsearch_dsl.Text()
-    track = elasticsearch_dsl.Text()
-    album = elasticsearch_dsl.Text()
+    artist = Text()
+    lyrics = Text()
+    track = Text()
+    album = Text()
 
     class Index:
         name = 'lyrics'
-        doc_type = '_doc'
-
-    class Meta:
-        doc_type = '_doc'

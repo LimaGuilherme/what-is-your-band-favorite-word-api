@@ -24,3 +24,7 @@ class ConfigClassNotFound(Exception):
 
 class AlbumsNotFound(Exception):
     pass
+
+
+class LyricsNotFound(Exception):
+    pass

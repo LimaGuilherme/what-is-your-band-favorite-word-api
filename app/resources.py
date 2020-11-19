@@ -6,7 +6,7 @@ import re
 from flask import request, g, Response
 from flask_restful import Resource
 
-from app import  config as config_module
+from app import config as config_module, exceptions
 
 config = config_module.get_config()
 
@@ -107,10 +107,13 @@ class ArtistResource(ResourceBase):
         self.artist_service = artist_service
 
     def get(self, artist):
-        if artist:
-            words_frequency = self.artist_service.count_frequency(artist)
-            return self.response({'words_frequency': words_frequency})
-        return self.return_artist_not_send()
+        try:
+            if artist:
+                words_frequency = self.artist_service.count_frequency(artist)
+                return self.response({'words_frequency': words_frequency})
+            return self.return_artist_not_send()
+        except exceptions.LyricsNotFound:
+            return self.return_not_found()
 
     def post(self, artist):
         if artist:

@@ -15,8 +15,7 @@ from app.domain.statitics import ESStaticsCount
 config = config_module.get_config()
 
 elasticsearch_connection = connections.create_connection(
-    hosts=[{'host': config.ELASTICSEARCH_HOST, 'port': int(config.ELASTICSEARCH_PORT)}],
-    use_ssl=config.ELASTICSEARCH_USE_SSL,
+    hosts=[{'host': config.ELASTICSEARCH_HOST, 'port': int(config.ELASTICSEARCH_PORT), 'use_ssl': False}],
     verify_certs=False,
     connection_class=elasticsearch.RequestsHttpConnection)
 
