@@ -19,7 +19,7 @@ class Config(object):
     SPOTIFY_CLIENT_SECRET = os.environ['SPOTIFY_CLIENT_SECRET']
     ELASTICSEARCH_HOST = os.environ['ELASTICSEARCH_HOST']
     ELASTICSEARCH_PORT = os.environ['ELASTICSEARCH_PORT']
-    ELASTICSEARCH_USE_SSL = os.environ['ELASTICSEARCH_USE_SSL']
+    GENIUS_ACESS_TOKEN = os.environ['GENIUS_ACESS_TOKEN']
 
     def __init__(self):
         if self.ENVIRONMENT is None:

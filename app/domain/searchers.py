@@ -22,132 +22,75 @@ class LyricsSearcher(object):
     def __init__(self, albums_searcher, track_searcher):
         self.albums_searcher = albums_searcher
         self.track_searcher = track_searcher
-
-    def lyrics_transform_case(self, s: str) -> str:
-        words = s.split()
-        new_words = []
-        for word in words:
-            new_words.append(word[0].capitalize() + word[1:])
-        s = "_".join(new_words)
-        s = s.replace("<", "Less_Than")
-        s = s.replace(">", "Greater_Than")
-        s = s.replace("#", "Number_")
-        s = s.replace("[", "(")
-        s = s.replace("]", ")")
-        s = s.replace("{", "(")
-        s = s.replace("}", ")")
-        try:
-            # Python 3 version
-            s = urllib.parse.urlencode([(0, s)])[2:]
-        except AttributeError:
-            # Python 2 version
-            s = urllib
-        return s
+        self.__genius_search_url = 'https://api.genius.com/search'
+        self.__genius_token = config.GENIUS_ACESS_TOKEN
 
     def request_song_info(self, track_name, track_artist):
-        self.track_name = track_name
-        self.track_artist = track_artist
-        base_url = 'https://api.genius.com'
-        headers = {'Authorization': 'Bearer ' + 'ntyBy8mQc2YoI_qIscfE3qCPRBrVAltVt-CN7zZlBNl6ybmedMoJECpDBWfHUAJx'}
-        search_url = base_url + '/search'
-        data = {'q': track_name + ' ' + track_artist}
-        response = requests.get(search_url, data=data, headers=headers)
-        self.response = response
-        return self.response
+        return requests.get(url=self.__genius_search_url,
+                            data={'q': track_name + ' ' + track_artist},
+                            headers={'Authorization': 'Bearer ' + self.__genius_token})
 
-    def check_hits(self):
-        json = self.response.json()
+    def check_hits(self, response, artist):
+        json = response.json()
         remote_song_info = None
         for hit in json['response']['hits']:
-            if self.track_artist.lower() in hit['result']['primary_artist']['name'].lower():
+            if artist.lower() in hit['result']['primary_artist']['name'].lower():
                 remote_song_info = hit
                 break
-        self.remote_song_info = remote_song_info
-        return self.remote_song_info
+        return remote_song_info
 
-    def get_url(self):
-        song_url = self.remote_song_info['result']['url']
-        self.song_url = song_url
-        return self.song_url
-
-    def scrape_lyrics(self):
-        page = requests.get(self.song_url)
+    def scrape_lyrics(self, remote_song_info):
+        page = requests.get(remote_song_info['result']['url'])
         html = BeautifulSoup(page.text, 'html.parser')
-        lyrics1 = html.find("div", class_="lyrics")
-        lyrics2 = html.find("div", class_="Lyrics__Container-sc-1ynbvzw-2 jgQsqn")
-        if lyrics1:
-            lyrics = lyrics1.get_text()
-        elif lyrics2:
-            lyrics = lyrics2.get_text()
-        elif lyrics1 == lyrics2 == None:
-            lyrics = None
+        lyrics = None
+
+        lyrics_one = html.find("div", class_="lyrics")
+        if lyrics_one:
+            lyrics = lyrics_one.get_text()
+            return lyrics
+
+        lyrics_two = html.find("div", class_="Lyrics__Container-sc-1ynbvzw-2 jgQsqn")
+        if lyrics_two:
+            lyrics = lyrics_two.get_text()
+            return lyrics
+
         return lyrics
 
     def get_breno(self, artist, track):
         response = self.request_song_info(track, artist)
-        remote_song_info = self.check_hits()
-        if remote_song_info == None:
-            lyrics = None
-        else:
-            url = self.get_url()
-            lyrics = self.scrape_lyrics()
-        return lyrics
+        remote_song_info = self.check_hits(response, artist)
 
-    def noname(self, artist: str, title: str) -> str:
-        try:
-            base_url = "https://lyrics.wikia.com/"
-            page_name = '{}:{}'.format(self.lyrics_transform_case(artist), self.lyrics_transform_case(title))
-            url = base_url + page_name
-            response = requests.get(url)
-            doc = lxml.html.parse(BytesIO(response.content), base_url=url)
-        except IOError:
-            raise
-        try:
-            lyric_box = doc.getroot().cssselect(".lyricbox")[0]
-        except IndexError as ex:
-            raise
-        except Exception as ex:
-            raise
+        if remote_song_info:
+            lyrics = self.scrape_lyrics(remote_song_info)
+            return lyrics
 
-        if len(doc.getroot().cssselect(".lyricbox a[title=\"Instrumental\"]")):
-            return None
-
-        _lyrics = []
-        if lyric_box.text is not None:
-            _lyrics.append(lyric_box.text)
-        for node in lyric_box:
-            if str(lyric_box.tag).lower() == "br":
-                _lyrics.append("\n")
-            if node.tail is not None:
-                _lyrics.append(node.tail)
-        return "".join(_lyrics).strip()
+        return None
 
     def get_lyrics(self, artist: str) -> List[Lyrics]:
         albums = self.albums_searcher.get_albums(artist)
+
         if not albums:
             raise exceptions.AlbumsNotFound
+
         albums = self.albums_searcher.remove_remaster_and_live_albums(albums)
         albums_to_tracks = {}
         track_lyrics = []
-
         for album in albums:
             try:
                 if not albums_to_tracks.get(album):
                     albums_to_tracks[album] = []
                 albums_to_tracks[album] = self.track_searcher.get_album_tracks(album)
-            except:
+            except Exception as ex:
                 continue
 
         for album, tracks in albums_to_tracks.items():
             for track in tracks:
                 try:
                     lyric = self.get_breno(artist, track)
-                    # lyric = self.noname(artist, track)
                     if lyric:
                         track_lyrics.append(Lyrics(artist=artist, album=album, track=track, lyrics=lyric))
                 except Exception as ex:
                     continue
-        print('track_lyrics')
         return track_lyrics
 
 

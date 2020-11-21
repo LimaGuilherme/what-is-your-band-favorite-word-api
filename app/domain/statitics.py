@@ -28,9 +28,11 @@ class ESStaticsCount(object):
             for term, frequency in documents['term_vectors']['lyrics']['terms'].items():
                 if term in STOP_WORDS:
                     continue
+
                 if term in result:
                     result[term] += frequency['term_freq']
                     continue
+
                 result[term] = frequency['term_freq']
         sorted_result = sorted(result.items(), key=lambda x: x[1])
         return sorted_result
