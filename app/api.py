@@ -4,13 +4,14 @@ import elasticsearch
 
 from flask_restful import Api
 from elasticsearch_dsl.connections import connections
-from app import resources
-from app import config as config_module
 
 from app.domain.application_service import ArtistLyricsService
 from app.domain.repositories import ElasticSearchRepository
 from app.domain.searchers import AlbumsSearcher, TrackSearcher, LyricsSearcher
 from app.domain.statitics import ESStaticsCount
+
+from app import resources, config as config_module
+
 
 config = config_module.get_config()
 

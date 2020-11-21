@@ -12,5 +12,6 @@ cache_folder/
 dev/
 .idea/
 .env
+data/
 .env.deploy
 .Rhistory

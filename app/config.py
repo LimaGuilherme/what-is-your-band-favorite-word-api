@@ -30,20 +30,9 @@ class ProductionConfig(Config):
     ENVIRONMENT = 'production'
 
 
-class StagingConfig(Config):
-    ENVIRONMENT = 'staging'
-    DEBUG = True
-
-
 class DevelopmentConfig(Config):
     ENVIRONMENT = 'development'
     DEVELOPMENT = True
-    DEBUG = True
-    SQLALCHEMY_RECORD_QUERIES = True
-
-
-class SandboxConfig(Config):
-    ENVIRONMENT = 'sandbox'
     DEBUG = True
     SQLALCHEMY_RECORD_QUERIES = True
 

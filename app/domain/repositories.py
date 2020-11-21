@@ -1,9 +1,8 @@
-
 import elasticsearch
-from app import exceptions
 from elasticsearch_dsl import Document, Text
-
 from typing import List
+
+from app import exceptions
 from app.domain.entity import Lyrics
 
 
@@ -13,7 +12,10 @@ class ElasticSearchRepository(object):
         self.__elastic_search_connection = elastic_search_connection
 
     def save(self, lyrics: Lyrics) -> None:
-        lyrics_document = ESLyricsDocument(artist=lyrics.artist, lyrics=lyrics.lyrics, track=lyrics.track, album=lyrics.album)
+        lyrics_document = ESLyricsDocument(artist=lyrics.artist,
+                                           lyrics=lyrics.lyrics,
+                                           track=lyrics.track,
+                                           album=lyrics.album)
         try:
             lyrics_document.save()
         except elasticsearch.TransportError as ex:

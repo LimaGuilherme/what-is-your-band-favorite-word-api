@@ -1,17 +1,11 @@
 import spotipy
-import urllib
 import requests
-import lxml.html
 
 from typing import List
-from io import BytesIO
-
 from bs4 import BeautifulSoup
 from spotipy.oauth2 import SpotifyClientCredentials
 
-
-from app import exceptions
-from app import config as config_module
+from app import exceptions, config as config_module
 from app.domain.entity import Lyrics
 
 config = config_module.get_config()
