@@ -16,7 +16,9 @@ from app import resources, config as config_module
 config = config_module.get_config()
 
 elasticsearch_connection = connections.create_connection(
-    hosts=[{'host': config.ELASTICSEARCH_HOST, 'port': int(config.ELASTICSEARCH_PORT), 'use_ssl': False}],
+    hosts=[{'host': config.ELASTICSEARCH_HOST,
+            'port': int(config.ELASTICSEARCH_PORT),
+            'use_ssl': False}],
     verify_certs=False,
     connection_class=elasticsearch.RequestsHttpConnection)
 
@@ -34,4 +36,3 @@ def create_api(app):
     api.add_resource(resources.ArtistResource,
                      '/api/artists/<string:artist>/lyrics',
                      resource_class_kwargs={'artist_service': artist_service})
-

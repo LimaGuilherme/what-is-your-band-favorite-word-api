@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "create new index"
-curl -X PUT "http://localhost:9200/lyrics555/" -d'
+curl -X PUT "localhost:9200/lyrics/" -d'
 {
       "mappings": {
           "properties": {
@@ -11,7 +11,7 @@ curl -X PUT "http://localhost:9200/lyrics555/" -d'
               "store": true,
               "analyzer": "custom_analyzer"
             },
-            "artits": {
+            "artist": {
               "type": "text",
               "term_vector": "with_positions_offsets_payloads",
               "analyzer": "custom_analyzer"

@@ -1,5 +1,6 @@
 from typing import List
 
+from app import exceptions
 from app.domain.entity import Lyrics
 from app.domain.stop_words import STOP_WORDS
 
@@ -10,6 +11,9 @@ class ESStaticsCount(object):
         self.__elastic_search_connection = elastic_search_connection
 
     def count_words_frequency(self, lyrics_list: List[Lyrics]) -> List:
+        if not lyrics_list:
+            raise exceptions.LyricsNotFound
+
         docs_ids = []
         result = {}
 
@@ -17,7 +21,6 @@ class ESStaticsCount(object):
             docs_ids.append(str(lyrics.id))
 
         es_result = self.__elastic_search_connection.mtermvectors(index='lyrics',
-                                                                  doc_type='_doc',
                                                                   ids=docs_ids,
                                                                   fields=['lyrics'],
                                                                   field_statistics=False,

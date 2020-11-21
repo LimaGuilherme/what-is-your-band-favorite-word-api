@@ -16,4 +16,3 @@ class ArtistLyricsService(object):
         lyrics_list = self.lyrics_searcher.get_lyrics(artist)
         for lyrics in lyrics_list:
             self.lyrics_repository.save(lyrics)
-

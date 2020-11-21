@@ -53,8 +53,12 @@ class ResourceBase(Resource):
             response.update(extra)
         return response
 
-    def return_not_found(self, exception=None):
-        return {'result': 'error', 'error': 'Not Found', 'exception': str(exception)}, 404
+    def return_elastic_search_connection_error(self):
+        return {'result': 'error',
+                'exception': "Maybe your elastic search isn't working"}, 502
+
+    def return_no_lyrics_were_found(self):
+        return {'result': 'error', 'exception': 'Sadly no lyrics were found'}, 404
 
     def return_unexpected_error(self, exception=None):
         return {'result': 'error', 'error': 'General Error', 'exception': str(exception)}, 500
@@ -70,12 +74,12 @@ class ArtistResource(ResourceBase):
 
     def get(self, artist):
         try:
-            if artist:
-                words_frequency = self.artist_service.count_frequency(artist)
-                return self.response({'words_frequency': words_frequency})
-            return self.return_artist_not_send()
+            words_frequency = self.artist_service.count_frequency(artist)
+            return self.response({'words_frequency': words_frequency})
+        except exceptions.ElasticSearchConnectionError:
+            return self.return_elastic_search_connection_error()
         except exceptions.LyricsNotFound:
-            return self.return_not_found()
+            return self.return_no_lyrics_were_found()
 
     def post(self, artist):
         if artist:

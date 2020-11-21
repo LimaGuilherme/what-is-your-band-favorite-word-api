@@ -17,7 +17,7 @@ class LyricsSearcher(object):
         self.albums_searcher = albums_searcher
         self.track_searcher = track_searcher
         self.__genius_search_url = 'https://api.genius.com/search'
-        self.__genius_token = config.GENIUS_ACESS_TOKEN
+        self.__genius_token = config.GENIUS_ACCESS_TOKEN
 
     def request_song_info(self, track_name, track_artist):
         return requests.get(url=self.__genius_search_url,
@@ -121,7 +121,7 @@ class AlbumsSearcher(object):
         acceptable_albums = []
         unacceptable_albums = ['instrumental', 'international', 'live', 'version',
                                'limited', 'mtv', 'bonus', 'tour', 'anniversary', 'standard', 'track',
-                               'exclusive',  'gold', 'edition', 'commentary', 'remaster', 'acoustic']
+                               'exclusive', 'gold', 'edition', 'commentary', 'remaster', 'acoustic']
         for album in albums:
             this_album_album_is_acceptable = True
             album = album.replace('(', '')
@@ -148,7 +148,8 @@ class AlbumsSearcher(object):
 
         albums = []
         albums_titles = []
-        results = self.__spotify_client.artist_albums(artist_item["id"], album_type="album")
+        results = self.__spotify_client.artist_albums(artist_item["id"],
+                                                      album_type="album")
         albums.extend(results["items"])
         while results["next"]:
             results = self.__spotify_client.next(results)

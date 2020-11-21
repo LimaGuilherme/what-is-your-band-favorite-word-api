@@ -1,4 +1,5 @@
 import elasticsearch
+
 from elasticsearch_dsl import Document, Text
 from typing import List
 
@@ -27,18 +28,23 @@ class ElasticSearchRepository(object):
 
     def get_by_artist(self, artist: str) -> List[Lyrics]:
         lyrics_list = []
-        searcher = ESLyricsDocument.search().query("match", artist=artist).params(size=1000, timeout='150s')
-        es_result = searcher.execute()
-        for lyrics_document in es_result['hits']['hits']:
+        documents = self.__query_documents(artist)
+        for lyrics_document in documents['hits']['hits']:
             lyrics_list.append(Lyrics(lyrics_document['_source']['artist'],
                                       lyrics_document['_source']['album'],
                                       lyrics_document['_source']['track'],
                                       lyrics_document['_source']['lyrics'],
                                       lyrics_document['_id'])
                                )
-        if not lyrics_list:
-            raise exceptions.LyricsNotFound
         return lyrics_list
+
+    def __query_documents(self, artist):
+        try:
+            searcher = ESLyricsDocument.search().query("match", artist=artist).params(size=1000, timeout='150s')
+            documents = searcher.execute()
+        except elasticsearch.ConnectionError:
+            raise exceptions.ElasticSearchConnectionError
+        return documents
 
 
 class ESLyricsDocument(Document):

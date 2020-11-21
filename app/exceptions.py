@@ -28,3 +28,7 @@ class AlbumsNotFound(Exception):
 
 class LyricsNotFound(Exception):
     pass
+
+
+class ElasticSearchConnectionError(Exception):
+    pass

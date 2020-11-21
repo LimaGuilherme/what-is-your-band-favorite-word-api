@@ -11,6 +11,7 @@ temp_files/
 cache_folder/
 dev/
 .idea/
+.github/
 .env
 data/
 .env.deploy

@@ -104,7 +104,7 @@ services:
     restart: unless-stopped
     command: >
         bash -c "flask run"
-        /bin/sh -c "create-elasticsearch-index.sh"
+        bash -c "create-elasticsearch-index.sh"
     ports:
       - "6669:6669"
     networks:
