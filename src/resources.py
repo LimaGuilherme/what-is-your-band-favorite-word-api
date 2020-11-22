@@ -6,7 +6,7 @@ from functools import wraps
 from flask import Response
 from flask_restful import Resource
 
-from app import config as config_module, exceptions
+from src import configurations as config_module, exceptions
 
 config = config_module.get_config()
 

@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 
-from app import api, config as config_module
+from src import api, configurations as config_module
 
 config = config_module.get_config()
 

@@ -1,8 +1,8 @@
 from typing import List
 
-from app import exceptions
-from app.domain.entity import Lyrics
-from app.domain.stop_words import STOP_WORDS
+from src import exceptions
+from src.domain.entity import Lyrics
+from src.domain.stop_words import STOP_WORDS
 
 
 class ESStaticsCount(object):
@@ -39,3 +39,17 @@ class ESStaticsCount(object):
                 result[term] = frequency['term_freq']
         sorted_result = sorted(result.items(), key=lambda x: x[1])
         return sorted_result
+
+
+class MongoStaticsCount(object):
+
+    def __init__(self, mongo_db):
+        self.__mongo_db = mongo_db
+        self.__collection = self.__mongo_db['lyrics']
+
+    def count_words_frequency(self, lyrics_list: List[Lyrics]) -> List:
+        if not lyrics_list:
+            raise exceptions.LyricsNotFound
+
+        for documents in lyrics_list:
+            print(documents)

@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from app import exceptions
-from app.domain.searchers import TrackSearcher, AlbumsSearcher, LyricsSearcher
+from src import exceptions
+from src.domain.searchers import TrackSearcher, AlbumsSearcher, LyricsSearcher
 
 
 class TestTrackSearcher(TestCase):

@@ -1,12 +1,8 @@
-#  -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
-
 import os
 
 from importlib import import_module
 
-from app import exceptions
+from src import exceptions
 
 
 class Config(object):
@@ -20,14 +16,8 @@ class Config(object):
     ELASTICSEARCH_HOST = os.environ['ELASTICSEARCH_HOST']
     ELASTICSEARCH_PORT = os.environ['ELASTICSEARCH_PORT']
     GENIUS_ACCESS_TOKEN = os.environ['GENIUS_ACCESS_TOKEN']
-
-    def __init__(self):
-        if self.ENVIRONMENT is None:
-            raise TypeError('You should use one of the specialized config class')
-
-
-class ProductionConfig(Config):
-    ENVIRONMENT = 'production'
+    MONGO_HOST = os.environ['MONGO_HOST']
+    MONGO_PORT = os.environ['MONGO_PORT']
 
 
 class DevelopmentConfig(Config):

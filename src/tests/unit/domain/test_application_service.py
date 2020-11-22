@@ -1,7 +1,7 @@
 from unittest import TestCase, mock
 from unittest.mock import MagicMock
 
-from app.domain.application_service import ArtistLyricsService
+from src.domain.application_service import ArtistLyricsService
 
 
 class TestArtistLyricsService(TestCase):

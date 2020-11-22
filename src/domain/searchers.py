@@ -5,8 +5,8 @@ from typing import List
 from bs4 import BeautifulSoup
 from spotipy.oauth2 import SpotifyClientCredentials
 
-from app import exceptions, config as config_module
-from app.domain.entity import Lyrics
+from src import exceptions, configurations as config_module
+from src.domain.entity import Lyrics
 
 config = config_module.get_config()
 
