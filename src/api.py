@@ -24,14 +24,14 @@ elasticsearch_connection = es_connections.create_connection(
 
 mongo_client = pymongo.MongoClient(config.MONGO_HOST, int(config.MONGO_PORT))
 mongo_lyrics_db = mongo_client['local']
-mongo_lyrics_db.products.create_index("sku", unique=True)
+
 
 albums_searcher = AlbumsSearcher()
 track_searcher = TrackSearcher()
 lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher)
 
 repository = MongoRepository(mongo_lyrics_db)
-statistic = MongoStaticsCount(mongo_lyrics_db)
+statistic = MongoStaticsCount()
 
 # statistic = ESStaticsCount(elasticsearch_connection)
 # repository = ElasticSearchRepository(elasticsearch_connection)

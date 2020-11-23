@@ -66,14 +66,14 @@ class MongoRepository:
 
     def get_by_artist(self, artist: str) -> List[Lyrics]:
         lyrics_list = []
-        for lyrics_document in self.__collection.find({"lyrics.artist": artist}):
-            lyrics_list.append(Lyrics(lyrics_document['_source']['artist'],
-                                      lyrics_document['_source']['album'],
-                                      lyrics_document['_source']['track'],
-                                      lyrics_document['_source']['lyrics'],
+        for lyrics_document in self.__collection.find({"artist": artist}):
+            lyrics_list.append(Lyrics(lyrics_document['artist'],
+                                      lyrics_document['album'],
+                                      lyrics_document['track'],
+                                      lyrics_document['lyrics'],
                                       lyrics_document['_id'])
                                )
-            return lyrics_list
+        return lyrics_list
 
     def save(self, lyrics: Lyrics) -> None:
         self.__collection.insert_one(

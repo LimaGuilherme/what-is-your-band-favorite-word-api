@@ -5,6 +5,10 @@ from src.domain.entity import Lyrics
 from src.domain.stop_words import STOP_WORDS
 
 
+class StatisticCount:
+    pass
+
+
 class ESStaticsCount(object):
 
     def __init__(self, elastic_search_connection):
@@ -43,13 +47,26 @@ class ESStaticsCount(object):
 
 class MongoStaticsCount(object):
 
-    def __init__(self, mongo_db):
-        self.__mongo_db = mongo_db
-        self.__collection = self.__mongo_db['lyrics']
-
     def count_words_frequency(self, lyrics_list: List[Lyrics]) -> List:
         if not lyrics_list:
             raise exceptions.LyricsNotFound
 
-        for documents in lyrics_list:
-            print(documents)
+        result = {}
+        for lyrics in lyrics_list:
+            lyrics_words = lyrics.lyrics.split(' ')
+
+            for lyrics_word in lyrics_words:
+                lyrics_word = lyrics_word.lower()
+
+                if lyrics_word in STOP_WORDS:
+                    continue
+
+                if lyrics_word in result:
+                    result[lyrics_word] += 1
+                    continue
+
+                result[lyrics_word] = 1
+
+        result = sorted(result.items(), key=lambda x: x[1], reverse=True)
+        return result
+

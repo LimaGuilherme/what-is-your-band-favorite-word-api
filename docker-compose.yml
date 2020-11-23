@@ -92,29 +92,29 @@ services:
     ports:
       - 8081:8081
 
-  wiybfw-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: wiybfw-api
-    volumes:
-    - ./:/code
-    env_file:
-      - .env
-    restart: unless-stopped
-    command: >
-        bash -c "flask run"
-        bash -c "create-elasticsearch-index.sh"
-    ports:
-      - "6669:6669"
-    networks:
-      - wiybfw-network
-    depends_on:
-      - es01
-      - es02
-      - es03
-      - kib01
-      - mongo
+#  wiybfw-api:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: wiybfw-api
+#    volumes:
+#    - ./:/code
+#    env_file:
+#      - .env
+#    restart: unless-stopped
+#    command: >
+#        bash -c "flask run"
+#        bash -c "create-elasticsearch-index.sh"
+#    ports:
+#      - "6669:6669"
+#    networks:
+#      - wiybfw-network
+#    depends_on:
+#      - es01
+#      - es02
+#      - es03
+#      - kib01
+#      - mongo
 
 volumes:
   data01:
