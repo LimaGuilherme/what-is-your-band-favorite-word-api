@@ -3,7 +3,7 @@ from typing import List
 
 from src import exceptions
 from src.domain.entity import Lyrics
-from src.domain.repositories import MongoRepository, ElasticSearchRepository
+from src.domain.repositories import MongoRepository
 from src.domain.stop_words import STOP_WORDS
 
 

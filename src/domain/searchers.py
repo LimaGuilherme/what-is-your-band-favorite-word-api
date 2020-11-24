@@ -35,7 +35,7 @@ class LyricsSearcher(object):
 
         return remote_song_info
 
-    def scrape_lyrics(self, remote_song_info):
+    def scrape_lyrics(self, remote_song_info: str):
         page = requests.get(remote_song_info['result']['url'])
         html = BeautifulSoup(page.text, 'html.parser')
         lyrics = None
@@ -52,7 +52,7 @@ class LyricsSearcher(object):
 
         return lyrics
 
-    def get_breno(self, artist, track):
+    def get_breno(self, artist: str, track: str):
         response = self.request_song_info(track, artist)
         remote_song_info = self.check_hits(response, artist)
 
@@ -91,14 +91,14 @@ class LyricsSearcher(object):
         return track_lyrics
 
 
-class TrackSearcher(object):
+class TrackSearcher:
 
     def __init__(self):
         client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID,
                                                               client_secret=config.SPOTIFY_CLIENT_SECRET)
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-    def get_album_tracks(self, album: str) -> List:
+    def get_album_tracks(self, album: str) -> List[str]:
 
         results = self.__spotify_client.search(q="album:" + album, type="album")
 
@@ -114,7 +114,7 @@ class TrackSearcher(object):
         return [track['name'] for track in tracks["items"]]
 
 
-class AlbumsSearcher(object):
+class AlbumsSearcher:
 
     def __init__(self):
         client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID,
@@ -143,7 +143,7 @@ class AlbumsSearcher(object):
 
         return acceptable_albums
 
-    def get_albums(self, artist: str) -> List:
+    def get_albums(self, artist: str) -> List[str]:
         results = self.__spotify_client.search(q="artist:" + artist, type="artist")
         items = results["artists"]["items"]
 
