@@ -140,5 +140,6 @@ STOP_WORDS = {
     "sou", "sua", "suas", "talvez", "tanta", "tantas", "tanto", "tão", "tarde", "te", "temos", "tendes", "tens", "ter",
     "terceira", "terceiro", "teus", "tivemos", "tiveram", "tiveste", "tivestes", "toda", "todas", "todo", "três", "treze",
     "tua", "tuas", "tudo", "vai", "vais", "vão", "vários", "vem", "vêm", "vens", "vez", "vezes", "viagem", "vindo",
-    "vinte", "vocês", "vos", "vós", "vossa", "vossas", "vosso", "vossos", "zero"
+    "vinte", "vocês", "vos", "vós", "vossa", "vossas", "vosso", "vossos", "zero", "[chorus]", "[verse]", "[verse", "-", "[chorus",
+    "1]", "[pre-chorus]", "3]", "oh,", "pra", "tá", "vou", "fiz",
 }

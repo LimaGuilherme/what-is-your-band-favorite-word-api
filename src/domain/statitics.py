@@ -14,7 +14,7 @@ class ESStaticsCount(object):
     def __init__(self, elastic_search_connection):
         self.__elastic_search_connection = elastic_search_connection
 
-    def count_words_frequency(self, lyrics_list: List[Lyrics]) -> List:
+    def count_words_frequency(self, lyrics_list: List[Lyrics]) -> dict:
         if not lyrics_list:
             raise exceptions.LyricsNotFound
 
@@ -41,13 +41,12 @@ class ESStaticsCount(object):
                     continue
 
                 result[term] = frequency['term_freq']
-        sorted_result = sorted(result.items(), key=lambda x: x[1])
-        return sorted_result
+        return dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
 
 
 class MongoStaticsCount(object):
 
-    def count_words_frequency(self, lyrics_list: List[Lyrics]) -> List:
+    def count_words_frequency(self, lyrics_list: List[Lyrics]) -> dict:
         if not lyrics_list:
             raise exceptions.LyricsNotFound
 
@@ -67,6 +66,4 @@ class MongoStaticsCount(object):
 
                 result[lyrics_word] = 1
 
-        result = sorted(result.items(), key=lambda x: x[1], reverse=True)
-        return result
-
+        return dict(sorted(result.items(), key=lambda item: item[1], reverse=True))

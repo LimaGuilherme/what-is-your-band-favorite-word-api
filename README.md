@@ -1,34 +1,18 @@
- # Requirements
-    Linux
-    Python 3+
-    Pip3
-    Virtualenvwrapper (Optional but highly recommended)
-    Elasticsearch 6.8
-    
-    Linux
-    Docker 
-       
- # Installing
+ # Installing Local
  
-     $ git clone git@github.com:LimaGuilherme/what-is-your-band-favorite-word-api.git
-     $ mkvirtualenv -p python3 band-favorite-word-api
-     $ workon band-favorite-word-api
-     $ pip install -r requirements.txt
+    Requirements
+    
+     Linux
+     Python 3.9
+     Elasticsearch 7+
+     MongoDB
      
-     Dealing with environments variables
-
-    $ cd
-    $ vim .bashrc
-    
-    Add this in the end of file and reopen the terminal
-    alias load-env='export $(cat .env | xargs)'
-    alias load-env-test='export $(cat .env.test | xargs)'
-    
-    $ load-env
-    
-    Create a .env file based on .env.sample, with your custom configuration (if necessary) and then:
-
-    $ load-env
+    $ cp .env.sample .env
+    $ python3.8 -m venv wiybfw-api
+    $ source wiybfw-api/bin/activate
+    $ pip install -r requirements.txt
+    $ export $(cat .env | xargs)
+    $ flask run
     
 
 # Dependencies #1 - ElasticSearch Index
@@ -90,7 +74,8 @@
 * Coveralls - Python interface to coveralls.io API
 * coverage - Code coverage measurement for Python
 * Flask - The web framework used
-* ElasticSearch
+* ElasticSearch - 
+* MongoDB - 
 
 
 # Authors
@@ -98,4 +83,12 @@ Guilherme Lima - Initial work
 
 # License
 This project is licensed under the MIT License - see the LICENSE.md file for details
+
+# Warning
+This code uses an  part of the Genius API and Spotifity API. So there is no guarantee 
+that it won't stop working tomorrow, if they change how things work. I will however do
+my best to make things working again as soon as possible if that happens. So if it 
+stops working, let me know!
+
+
     
