@@ -27,10 +27,12 @@ class LyricsSearcher(object):
     def check_hits(self, response, artist):
         json = response.json()
         remote_song_info = None
+
         for hit in json['response']['hits']:
             if artist.lower() in hit['result']['primary_artist']['name'].lower():
                 remote_song_info = hit
                 break
+
         return remote_song_info
 
     def scrape_lyrics(self, remote_song_info):
@@ -69,6 +71,7 @@ class LyricsSearcher(object):
         albums = self.albums_searcher.remove_remaster_and_live_albums(albums)
         albums_to_tracks = {}
         track_lyrics = []
+
         for album in albums:
             try:
                 if not albums_to_tracks.get(album):
@@ -102,9 +105,10 @@ class TrackSearcher(object):
 
         if not results["albums"]["items"]:
             raise exceptions.AlbumsNotFound
-        album_id = results["albums"]["items"][0]["uri"]
 
+        album_id = results["albums"]["items"][0]["uri"]
         tracks = self.__spotify_client.album_tracks(album_id)
+
         for track in tracks["items"]:
             album_tracks.append(track["name"])
         return album_tracks
@@ -142,6 +146,7 @@ class AlbumsSearcher(object):
     def get_albums(self, artist: str) -> List:
         results = self.__spotify_client.search(q="artist:" + artist, type="artist")
         items = results["artists"]["items"]
+
         if not items:
             raise exceptions.AlbumsNotFound
         artist_item = items[0]
@@ -151,6 +156,7 @@ class AlbumsSearcher(object):
         results = self.__spotify_client.artist_albums(artist_item["id"],
                                                       album_type="album")
         albums.extend(results["items"])
+
         while results["next"]:
             results = self.__spotify_client.next(results)
             albums.extend(results["items"])
@@ -159,6 +165,7 @@ class AlbumsSearcher(object):
 
         for album in albums:
             album_tittle = album["name"]
+
             if album_tittle not in seen:
                 print(" " + album_tittle)
                 seen.add(album_tittle)
