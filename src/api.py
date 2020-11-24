@@ -1,40 +1,22 @@
 # -*- coding: utf-8 -*-
 
-import elasticsearch
-import pymongo
-
 from flask_restful import Api
-from elasticsearch_dsl.connections import connections as es_connections
 
 from src.domain.application_service import ArtistLyricsService
-from src.domain.repositories import ElasticSearchRepository, MongoRepository
+from src.domain.repositories import create_repository
 from src.domain.searchers import AlbumsSearcher, TrackSearcher, LyricsSearcher
-from src.domain.statitics import ESStaticsCount, MongoStaticsCount
+from src.domain.statitics import create_statistic
 
 from src import resources, configurations as config_module
 
 config = config_module.get_config()
 
-elasticsearch_connection = es_connections.create_connection(
-    hosts=[{'host': config.ELASTICSEARCH_HOST,
-            'port': int(config.ELASTICSEARCH_PORT),
-            'use_ssl': False}],
-    verify_certs=False,
-    connection_class=elasticsearch.RequestsHttpConnection)
-
-mongo_client = pymongo.MongoClient(config.MONGO_HOST, int(config.MONGO_PORT))
-mongo_lyrics_db = mongo_client['local']
-
-
 albums_searcher = AlbumsSearcher()
 track_searcher = TrackSearcher()
 lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher)
 
-repository = MongoRepository(mongo_lyrics_db)
-statistic = MongoStaticsCount()
-
-# statistic = ESStaticsCount(elasticsearch_connection)
-# repository = ElasticSearchRepository(elasticsearch_connection)
+repository = create_repository()
+statistic = create_statistic(repository)
 
 artist_service = ArtistLyricsService(lyrics_searcher, statistic, repository)
 

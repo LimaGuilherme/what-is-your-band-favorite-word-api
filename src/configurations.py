@@ -18,6 +18,7 @@ class Config(object):
     GENIUS_ACCESS_TOKEN = os.environ['GENIUS_ACCESS_TOKEN']
     MONGO_HOST = os.environ['MONGO_HOST']
     MONGO_PORT = os.environ['MONGO_PORT']
+    REPOSITORY = os.environ['REPOSITORY']
 
 
 class DevelopmentConfig(Config):

@@ -1,7 +1,7 @@
 from typing import List
 
 
-class ArtistLyricsService(object):
+class ArtistLyricsService:
 
     def __init__(self, lyrics_searcher, statistic, repository):
         self.lyrics_searcher = lyrics_searcher

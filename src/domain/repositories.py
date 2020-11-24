@@ -1,16 +1,30 @@
 import elasticsearch
+import pymongo
 
+from elasticsearch_dsl.connections import connections as es_connections
 from elasticsearch_dsl import Document, Text
 from typing import List
 
 from src import exceptions
 from src.domain.entity import Lyrics
 
+from src import configurations as config_module
+
+config = config_module.get_config()
+
 
 class ElasticSearchRepository(object):
 
     def __init__(self, elastic_search_connection):
         self.__elastic_search_connection = elastic_search_connection
+
+    def find_terms(self,  docs_ids: List[str]):
+        return self.__elastic_search_connection.mtermvectors(index='lyrics',
+                                                             ids=docs_ids,
+                                                             fields=['lyrics'],
+                                                             field_statistics=False,
+                                                             term_statistics=False,
+                                                             payloads=True)
 
     def save(self, lyrics: Lyrics) -> None:
         lyrics_document = ESLyricsDocument(artist=lyrics.artist,
@@ -84,3 +98,23 @@ class MongoRepository:
                 'album': lyrics.album
             }
         )
+
+
+def create_repository():
+
+    if config.REPOSITORY == 'mongodb':
+        mongo_client = pymongo.MongoClient(config.MONGO_HOST, int(config.MONGO_PORT))
+        mongo_lyrics_db = mongo_client['local']
+        return MongoRepository(mongo_lyrics_db)
+
+    if config.REPOSITORY == 'elasticsearch':
+        elasticsearch_connection = es_connections.create_connection(
+            hosts=[{'host': config.ELASTICSEARCH_HOST,
+                    'port': int(config.ELASTICSEARCH_PORT),
+                    'use_ssl': False}],
+            verify_certs=False,
+            connection_class=elasticsearch.RequestsHttpConnection)
+
+        return ElasticSearchRepository(elasticsearch_connection)
+
+    raise

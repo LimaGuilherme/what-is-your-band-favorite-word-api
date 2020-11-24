@@ -1,18 +1,24 @@
+from abc import ABC, abstractmethod
 from typing import List
 
 from src import exceptions
 from src.domain.entity import Lyrics
+from src.domain.repositories import MongoRepository, ElasticSearchRepository
 from src.domain.stop_words import STOP_WORDS
 
 
-class StatisticCount:
-    pass
+class StatisticCount(ABC):
+
+    @abstractmethod
+    def count_words_frequency(self, lyrics_list: List[Lyrics]) -> dict:
+        pass
 
 
-class ESStaticsCount(object):
+class ESStaticsCount(StatisticCount):
 
-    def __init__(self, elastic_search_connection):
-        self.__elastic_search_connection = elastic_search_connection
+    def __init__(self, elastic_search_repository):
+        super(ESStaticsCount, self).__init__()
+        self.__elastic_search_repository = elastic_search_repository
 
     def count_words_frequency(self, lyrics_list: List[Lyrics]) -> dict:
         if not lyrics_list:
@@ -24,12 +30,7 @@ class ESStaticsCount(object):
         for lyrics in lyrics_list:
             docs_ids.append(str(lyrics.id))
 
-        es_result = self.__elastic_search_connection.mtermvectors(index='lyrics',
-                                                                  ids=docs_ids,
-                                                                  fields=['lyrics'],
-                                                                  field_statistics=False,
-                                                                  term_statistics=False,
-                                                                  payloads=True)
+        es_result = self.__elastic_search_repository.find_terms(docs_ids)
 
         for documents in es_result['docs']:
             for term, frequency in documents['term_vectors']['lyrics']['terms'].items():
@@ -44,7 +45,7 @@ class ESStaticsCount(object):
         return dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
 
 
-class MongoStaticsCount(object):
+class MongoStaticsCount(StatisticCount):
 
     def count_words_frequency(self, lyrics_list: List[Lyrics]) -> dict:
         if not lyrics_list:
@@ -67,3 +68,14 @@ class MongoStaticsCount(object):
                 result[lyrics_word] = 1
 
         return dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
+
+
+def create_statistic(repository):
+
+    if isinstance(repository, MongoRepository):
+        return MongoStaticsCount()
+
+    if isinstance(repository, ElasticSearchRepository):
+        return ESStaticsCount(repository)
+
+    raise
