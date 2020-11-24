@@ -99,7 +99,6 @@ class TrackSearcher(object):
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
     def get_album_tracks(self, album: str) -> List:
-        album_tracks = []
 
         results = self.__spotify_client.search(q="album:" + album, type="album")
 
@@ -109,9 +108,10 @@ class TrackSearcher(object):
         album_id = results["albums"]["items"][0]["uri"]
         tracks = self.__spotify_client.album_tracks(album_id)
 
-        for track in tracks["items"]:
-            album_tracks.append(track["name"])
-        return album_tracks
+        # for track in tracks["items"]:
+        #     album_tracks.append(track["name"])
+        #
+        return [track['name'] for track in tracks["items"]]
 
 
 class AlbumsSearcher(object):
@@ -121,7 +121,7 @@ class AlbumsSearcher(object):
                                                               client_secret=config.SPOTIFY_CLIENT_SECRET)
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-    def remove_remaster_and_live_albums(self, albums: list) -> List:
+    def remove_remaster_and_live_albums(self, albums: List[str]) -> List[str]:
         acceptable_albums = []
         unacceptable_albums = ['instrumental', 'international', 'live', 'version',
                                'limited', 'mtv', 'bonus', 'tour', 'anniversary', 'standard', 'track',
@@ -149,6 +149,7 @@ class AlbumsSearcher(object):
 
         if not items:
             raise exceptions.AlbumsNotFound
+
         artist_item = items[0]
 
         albums = []
