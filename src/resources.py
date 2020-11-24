@@ -59,6 +59,9 @@ class ResourceBase(Resource):
     def return_no_lyrics_were_found(self):
         return {'result': 'error', 'exception': 'Sadly no lyrics were found'}, 404
 
+    def return_no_artist_found(self):
+        return {'result': 'error', 'exception': 'This artist seems invalid, perhaps you misspelled'}, 404
+
     def return_unexpected_error(self, exception=None):
         return {'result': 'error', 'error': 'General Error', 'exception': str(exception)}, 500
 
@@ -78,16 +81,19 @@ class ArtistResource(ResourceBase):
         try:
             words_frequency = self.artist_service.count_frequency(artist)
             return self.response({'words_frequency': words_frequency})
-        except exceptions.InvalidRepository:
-            return self.return_invalid_repository()
         except exceptions.ElasticSearchConnectionError:
             return self.return_elastic_search_connection_error()
+        except exceptions.ArtistNotFound:
+            return self.return_no_artist_found()
         except exceptions.LyricsNotFound:
             return self.return_no_lyrics_were_found()
 
     def post(self, artist):
-        self.artist_service.index(artist)
-        return self.return_ok()
+        try:
+            self.artist_service.index(artist)
+            return self.return_ok()
+        except exceptions.LyricsNotFound:
+            return self.return_no_lyrics_were_found()
 
     @not_allowed
     def delete(self):

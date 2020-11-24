@@ -1,6 +1,5 @@
 from unittest import TestCase
 
-from src import exceptions
 from src.domain.searchers import TrackSearcher, AlbumsSearcher, LyricsSearcher
 
 
@@ -9,8 +8,9 @@ class TestTrackSearcher(TestCase):
     def test_should_raise_albums_not_found(self):
         track_searcher = TrackSearcher()
 
-        with self.assertRaises(exceptions.AlbumsNotFound):
-            track_searcher.get_album_tracks('MeteoroDaPaixão')
+        album_tracks = track_searcher.get_album_tracks('MeteoroDaPaixão')
+        self.assertEqual(album_tracks, [])
+        self.assertIsInstance(album_tracks, list)
 
 
 class TestLyricsSearcher(TestCase):
@@ -20,17 +20,18 @@ class TestLyricsSearcher(TestCase):
         albums_searcher = AlbumsSearcher()
         lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher)
 
-        with self.assertRaises(exceptions.AlbumsNotFound):
-            lyrics_searcher.get_lyrics('Mc Magro da Leste')
+        lyrics = lyrics_searcher.get_lyrics('Mc Magro da Leste')
+        self.assertEqual(lyrics, [])
+        self.assertIsInstance(lyrics, list)
 
 
 class TestAlbumsSearcher(TestCase):
 
     def test_should_raise_albums_not_found(self):
         albums_searcher = AlbumsSearcher()
-
-        with self.assertRaises(exceptions.AlbumsNotFound):
-            albums_searcher.get_albums('Mc Magro da Leste')
+        albums = albums_searcher.get_albums('Mc Magro da Leste')
+        self.assertEqual(albums, [])
+        self.assertIsInstance(albums, list)
 
     def test_should_remove_remaster_or_live_albums(self):
         albums_searcher = AlbumsSearcher()

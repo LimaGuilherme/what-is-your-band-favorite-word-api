@@ -36,3 +36,7 @@ class ElasticSearchConnectionError(Exception):
 
 class InvalidRepository(Exception):
     pass
+
+
+class ArtistNotFound(Exception):
+    pass

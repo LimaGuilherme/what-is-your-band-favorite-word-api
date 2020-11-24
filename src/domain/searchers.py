@@ -11,7 +11,7 @@ from src.domain.entity import Lyrics
 config = config_module.get_config()
 
 
-class LyricsSearcher(object):
+class LyricsSearcher:
 
     def __init__(self, albums_searcher, track_searcher):
         self.albums_searcher = albums_searcher
@@ -65,9 +65,6 @@ class LyricsSearcher(object):
     def get_lyrics(self, artist: str) -> List[Lyrics]:
         albums = self.albums_searcher.get_albums(artist)
 
-        if not albums:
-            raise exceptions.AlbumsNotFound
-
         albums = self.albums_searcher.remove_remaster_and_live_albums(albums)
         albums_to_tracks = {}
         track_lyrics = []
@@ -103,14 +100,11 @@ class TrackSearcher:
         results = self.__spotify_client.search(q="album:" + album, type="album")
 
         if not results["albums"]["items"]:
-            raise exceptions.AlbumsNotFound
+            return []
 
         album_id = results["albums"]["items"][0]["uri"]
         tracks = self.__spotify_client.album_tracks(album_id)
 
-        # for track in tracks["items"]:
-        #     album_tracks.append(track["name"])
-        #
         return [track['name'] for track in tracks["items"]]
 
 
@@ -148,7 +142,7 @@ class AlbumsSearcher:
         items = results["artists"]["items"]
 
         if not items:
-            raise exceptions.AlbumsNotFound
+            return []
 
         artist_item = items[0]
 
