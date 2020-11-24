@@ -8,14 +8,14 @@ class TestArtistSearcher(TestCase):
     def test_should_return_false_for_nonexistent_artist(self):
         artist_searcher = ArtistSearcher()
 
-        exists = artist_searcher.check_if_artist_exists('Random Unkown Artist')
-        self.assertEqual(exists, False)
+        is_valid = artist_searcher.is_this_artist_valid('Random Unknown Artist')
+        self.assertEqual(is_valid, False)
 
     def test_should_return_true_for_existing_artist(self):
         artist_searcher = ArtistSearcher()
 
-        exists = artist_searcher.check_if_artist_exists('Queen')
-        self.assertEqual(exists, True)
+        is_valid = artist_searcher.is_this_artist_valid('Queen')
+        self.assertEqual(is_valid, True)
 
 
 

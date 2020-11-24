@@ -73,7 +73,7 @@ class LyricsSearcher:
             try:
                 if not albums_to_tracks.get(album):
                     albums_to_tracks[album] = []
-                albums_to_tracks[album] = self.track_searcher.get_album_tracks(album)
+                albums_to_tracks[album] = self.track_searcher.get_tracks(album)
             except Exception as ex:
                 continue
 
@@ -86,26 +86,6 @@ class LyricsSearcher:
                 except Exception as ex:
                     continue
         return track_lyrics
-
-
-class TrackSearcher:
-
-    def __init__(self):
-        client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID,
-                                                              client_secret=config.SPOTIFY_CLIENT_SECRET)
-        self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-
-    def get_album_tracks(self, album: str) -> List[str]:
-
-        results = self.__spotify_client.search(q="album:" + album, type="album")
-
-        if not results["albums"]["items"]:
-            return []
-
-        album_id = results["albums"]["items"][0]["uri"]
-        tracks = self.__spotify_client.album_tracks(album_id)
-
-        return [track['name'] for track in tracks["items"]]
 
 
 class AlbumsSearcher:

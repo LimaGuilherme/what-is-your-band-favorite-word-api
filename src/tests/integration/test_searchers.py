@@ -1,16 +1,7 @@
 from unittest import TestCase
 
-from src.domain.searchers import TrackSearcher, AlbumsSearcher, LyricsSearcher
-
-
-class TestTrackSearcher(TestCase):
-
-    def test_should_raise_albums_not_found(self):
-        track_searcher = TrackSearcher()
-
-        album_tracks = track_searcher.get_album_tracks('MeteoroDaPaixão')
-        self.assertEqual(album_tracks, [])
-        self.assertIsInstance(album_tracks, list)
+from src.domain.searchers import AlbumsSearcher, LyricsSearcher
+from src.domain.track_searcher import TrackSearcher
 
 
 class TestLyricsSearcher(TestCase):

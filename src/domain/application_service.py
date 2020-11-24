@@ -14,7 +14,7 @@ class ArtistLyricsService:
         self.artist_searcher = artist_searcher
 
     def count_frequency(self, artist: str) -> dict:
-        if not self.artist_searcher.check_if_artist_exists(artist):
+        if not self.artist_searcher.is_this_artist_valid(artist):
             raise exceptions.ArtistNotFound
 
         lyrics_list = self.lyrics_repository.get_by_artist(artist)
@@ -25,6 +25,9 @@ class ArtistLyricsService:
         return self.statistic.count_words_frequency(lyrics_list)
 
     def index(self, artist: str) -> None:
+        if not self.artist_searcher.is_this_artist_valid(artist):
+            raise exceptions.ArtistNotFound
+
         lyrics_list = self.lyrics_searcher.get_lyrics(artist)
 
         if not lyrics_list:
