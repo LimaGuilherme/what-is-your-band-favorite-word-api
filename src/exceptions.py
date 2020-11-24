@@ -32,3 +32,7 @@ class LyricsNotFound(Exception):
 
 class ElasticSearchConnectionError(Exception):
     pass
+
+
+class InvalidRepository(Exception):
+    pass

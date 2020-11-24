@@ -3,7 +3,7 @@ from typing import List
 
 from src import exceptions
 from src.domain.entity import Lyrics
-from src.domain.repositories import MongoRepository
+from src.domain.repositories import MongoRepository, ElasticSearchRepository
 from src.domain.stop_words import STOP_WORDS
 
 
@@ -78,4 +78,4 @@ def create_statistic(repository):
     if isinstance(repository, ElasticSearchRepository):
         return ESStaticsCount(repository)
 
-    raise
+    raise exceptions.InvalidRepository

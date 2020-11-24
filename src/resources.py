@@ -54,8 +54,7 @@ class ResourceBase(Resource):
         return response
 
     def return_elastic_search_connection_error(self):
-        return {'result': 'error',
-                'exception': "Maybe your elastic search isn't working"}, 502
+        return {'result': 'error', 'exception': "Maybe your elastic search isn't working"}, 502
 
     def return_no_lyrics_were_found(self):
         return {'result': 'error', 'exception': 'Sadly no lyrics were found'}, 404
@@ -65,6 +64,9 @@ class ResourceBase(Resource):
 
     def return_artist_not_send(self, exception=None):
         return {'result': 'error', 'error': 'Artist Not Received', 'exception': str(exception)}, 400
+
+    def return_invalid_repository(self):
+        return {'result': 'error', 'error': 'Invalid Repository, You should use elasticsearch or mongodb'}, 405
 
 
 class ArtistResource(ResourceBase):
@@ -76,16 +78,16 @@ class ArtistResource(ResourceBase):
         try:
             words_frequency = self.artist_service.count_frequency(artist)
             return self.response({'words_frequency': words_frequency})
+        except exceptions.InvalidRepository:
+            return self.return_invalid_repository()
         except exceptions.ElasticSearchConnectionError:
             return self.return_elastic_search_connection_error()
         except exceptions.LyricsNotFound:
             return self.return_no_lyrics_were_found()
 
     def post(self, artist):
-        if artist:
-            self.artist_service.index(artist)
-            return self.return_ok()
-        return self.return_artist_not_send()
+        self.artist_service.index(artist)
+        return self.return_ok()
 
     @not_allowed
     def delete(self):

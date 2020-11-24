@@ -117,4 +117,4 @@ def create_repository():
 
         return ElasticSearchRepository(elasticsearch_connection)
 
-    raise
+    raise exceptions.InvalidRepository
