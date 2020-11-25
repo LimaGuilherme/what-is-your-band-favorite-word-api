@@ -18,6 +18,7 @@ albums_searcher = AlbumsSearcher()
 track_searcher = TrackSearcher()
 lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher)
 artist_searcher = ArtistSearcher()
+
 repository = create_repository()
 statistic = create_statistic(repository)
 
