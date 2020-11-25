@@ -16,6 +16,3 @@ class TestArtistSearcher(TestCase):
 
         is_valid = artist_searcher.is_this_artist_valid('Queen')
         self.assertEqual(is_valid, True)
-
-
-

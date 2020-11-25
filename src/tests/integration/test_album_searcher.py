@@ -38,4 +38,3 @@ class TestAlbumsSearcher(TestCase):
         albums = ['Mc Magro da Leste', 'Mc Magro da Lest Feat Paçoquinha', 'MC Magro Remix Proibidão']
         acceptable_albums = albums_searcher.remove_remaster_and_live_albums(albums)
         self.assertEqual(acceptable_albums, albums)
-

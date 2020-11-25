@@ -18,7 +18,7 @@ class ElasticSearchRepository(object):
     def __init__(self, elastic_search_connection):
         self.__elastic_search_connection = elastic_search_connection
 
-    def find_terms(self,  docs_ids: List[str]):
+    def find_terms(self, docs_ids: List[str]):
         return self.__elastic_search_connection.mtermvectors(index='lyrics',
                                                              ids=docs_ids,
                                                              fields=['lyrics'],

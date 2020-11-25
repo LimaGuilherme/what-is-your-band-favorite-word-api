@@ -6,7 +6,7 @@ from src.domain.album_searcher import AlbumsSearcher
 from src.domain.application_service import ArtistLyricsService
 from src.domain.artist_searcher import ArtistSearcher
 from src.domain.repositories import create_repository
-from src.domain.searchers import LyricsSearcher
+from src.domain.lyrics_searcher import LyricsSearcher
 from src.domain.track_searcher import TrackSearcher
 from src.domain.statitics import create_statistic
 
