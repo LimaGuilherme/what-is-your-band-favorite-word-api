@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.domain.track_searcher import TrackSearcher
+from src.domain.searchers import TrackSearcher
 
 
 class TestTrackSearcher(TestCase):

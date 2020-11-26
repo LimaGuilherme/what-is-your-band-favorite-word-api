@@ -1,9 +1,10 @@
 from unittest import TestCase
 
-from src.domain.album_searcher import AlbumsSearcher
+from src.domain.searchers import AlbumsSearcher
+from src.domain.searchers import LyricsSearcher
+from src.domain.searchers import TrackSearcher
+
 from src.domain.entity import Lyrics
-from src.domain.lyrics_searcher import LyricsSearcher
-from src.domain.track_searcher import TrackSearcher
 
 
 class TestLyricsSearcher(TestCase):

@@ -2,12 +2,13 @@
 
 from flask_restful import Api
 
-from src.domain.album_searcher import AlbumsSearcher
+from src.domain.searchers import AlbumsSearcher
+from src.domain.searchers import ArtistSearcher
+from src.domain.searchers import LyricsSearcher
+from src.domain.searchers import TrackSearcher
+
 from src.domain.application_service import ArtistLyricsService
-from src.domain.artist_searcher import ArtistSearcher
 from src.domain.repositories import create_repository
-from src.domain.lyrics_searcher import LyricsSearcher
-from src.domain.track_searcher import TrackSearcher
 from src.domain.statitics import create_statistic
 
 from src import resources, configurations as config_module
