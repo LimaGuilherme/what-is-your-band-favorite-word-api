@@ -5,54 +5,12 @@ from elasticsearch_dsl.connections import connections as es_connections
 from elasticsearch_dsl import Document, Text, Index
 from typing import List
 
-from src import exceptions
+from src import exceptions, elastisearch_configurations
 from src.domain.entity import Lyrics
 
 from src import configurations as config_module
 
 config = config_module.get_config()
-
-MAPPING = {
-    "properties": {
-        "lyrics": {
-            "type": "text",
-            "term_vector": "with_positions_offsets_payloads",
-            "store": True,
-            "analyzer": "custom_analyzer"
-        },
-        "artits": {
-            "type": "text",
-            "term_vector": "with_positions_offsets_payloads",
-            "analyzer": "custom_analyzer"
-        },
-        "album": {
-            "type": "text",
-            "term_vector": "with_positions_offsets_payloads",
-            "analyzer": "custom_analyzer"
-        },
-        "track": {
-            "type": "text",
-            "term_vector": "with_positions_offsets_payloads",
-            "analyzer": "custom_analyzer"
-        }
-    }
-}
-
-SETTINGS = {
-    "index": {"refresh_interval": -1},
-    "analysis": {
-        "analyzer": {
-            "custom_analyzer": {
-                "type": "custom",
-                "tokenizer": "whitespace",
-                "filter": [
-                    "lowercase",
-                    "type_as_payload",
-                ]
-            }
-        }
-    }
-}
 
 
 class ElasticSearchRepository(object):
@@ -89,10 +47,10 @@ class ElasticSearchRepository(object):
         index = Index(name=config.ELASTICSEARCH_INDEX)
         index.create()
         self.__elastic_search_connection.indices.close(index=config.ELASTICSEARCH_INDEX)
-        self.__elastic_search_connection.indices.put_settings(body=SETTINGS,
+        self.__elastic_search_connection.indices.put_settings(body=elastisearch_configurations.SETTINGS,
                                                               index=config.ELASTICSEARCH_INDEX)
         self.__elastic_search_connection.indices.put_mapping(doc_type='document',
-                                                             body=MAPPING,
+                                                             body=elastisearch_configurations.MAPPING,
                                                              include_type_name=True,
                                                              index=config.ELASTICSEARCH_INDEX)
         self.__elastic_search_connection.indices.open(index=config.ELASTICSEARCH_INDEX)
