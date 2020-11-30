@@ -99,11 +99,21 @@ services:
     container_name: wiybfw-api
     volumes:
     - ./:/code
-    env_file:
-      - .env
     restart: unless-stopped
-    command: >
-        bash -c "flask run"
+    environment:
+      PORT: ${APP_SETTINGS}
+      APP_SETTINGS: ${APP_SETTINGS}
+      ELASTICSEARCH_HOST: ${ELASTICSEARCH_HOST}
+      ELASTICSEARCH_PORT: ${ELASTICSEARCH_PORT}
+      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+      GENIUS_ACCESS_TOKEN: ${GENIUS_ACCESS_TOKEN}
+      MONGO_HOST: ${MONGO_HOST}
+      MONGO_PORT: ${MONGO_PORT}
+      REPOSITORY: ${REPOSITORY}
+      ELASTICSEARCH_INDEX: ${ELASTICSEARCH_INDEX}
+      MONGO_COLLECTION: ${MONGO_COLLECTION}
+
     ports:
       - "6669:6669"
     networks:

@@ -13,11 +13,12 @@ Then setup your infos at "New Api Client" and get your "ACCESS TOKEN"
 # Setting using Docker
 
     $ cp .env.sample .env #change your variables
+    $ cp .env.test.sample .env.test #change your variables
     $ docker-compose up --build -d
 
 # Running
 
-    $ docker-compose --env-file .env up
+    $ docker-compose up
 
 # Running tests
     $ docker-compose --env-file .env-test up
