@@ -80,7 +80,7 @@ class ArtistResource(ResourceBase):
     def get(self, artist):
         try:
             words_frequency = self.artist_service.count_frequency(artist)
-            return self.response({'words_frequency': words_frequency})
+            return self.response(words_frequency)
         except exceptions.ElasticSearchConnectionError:
             return self.return_elastic_search_connection_error()
         except exceptions.ArtistNotFound:
