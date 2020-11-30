@@ -68,19 +68,17 @@ class LyricsSearcher:
         track_lyrics = []
 
         for album in albums:
-            try:
-                if not albums_to_tracks.get(album):
-                    albums_to_tracks[album] = []
-                albums_to_tracks[album] = self.track_searcher.get_tracks(album)
-            except Exception as ex:
-                continue
+            if not albums_to_tracks.get(album):
+                albums_to_tracks[album] = []
+            albums_to_tracks[album] = self.track_searcher.get_tracks(album)
 
         for album, tracks in albums_to_tracks.items():
             for track in tracks:
-                try:
-                    lyric = self.get_breno(artist, track)
-                    if lyric:
-                        track_lyrics.append(Lyrics(artist=artist, album=album, track=track, lyrics=lyric))
-                except Exception as ex:
+
+                lyrics = self.get_breno(artist, track)
+
+                if not lyrics:
                     continue
+                track_lyrics.append(Lyrics(artist=artist, album=album, track=track, lyrics=lyrics))
+
         return track_lyrics
