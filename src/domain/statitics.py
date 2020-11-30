@@ -1,3 +1,5 @@
+import re
+
 from abc import ABC, abstractmethod
 from typing import List
 
@@ -31,6 +33,7 @@ class ESStaticsCount(StatisticCount):
 
         for documents in es_result['docs']:
             for term, frequency in documents['term_vectors']['lyrics']['terms'].items():
+                term = re.sub(r'\W+', '', term)
                 if term in STOP_WORDS:
                     continue
 
