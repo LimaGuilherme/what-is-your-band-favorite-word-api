@@ -1,3 +1,28 @@
+# Set Up Your Account (Spotify)
+
+To use the Web API, start by creating a Spotify user account (Premium or Free). To do that, simply sign up at www.spotify.com.
+
+When you have a user account, go to the Dashboard page at the Spotify Developer website and, if necessary, log in. Accept the latest Developer Terms of Service to complete your account set up.
+
+# Set Up Your Account (Genius)
+
+To use Genius API you will need a token. Create a account https://genius.com/signup_or_login
+
+Then setup your infos at "New Api Client" and get your "ACCESS TOKEN"
+
+# Setting using Docker
+
+    $ cp .env.sample .env #change your fvariables
+    $ docker-compose up --build -d
+
+# Running
+
+    $ docker-compose up
+
+# Running tests
+    $ docker exec -it wiybfw-api bash
+    $ python -m unittest
+ 
  # Installing Local
  
     Requirements
@@ -15,13 +40,6 @@
     $ flask run
     
 
-   
-   # Built With
-* Coveralls - Python interface to coveralls.io API
-* coverage - Code coverage measurement for Python
-* Flask - The web framework used
-* ElasticSearch - 
-* MongoDB - 
 
 
 # Authors
