@@ -2,13 +2,13 @@
 
 To use the Web API, start by creating a Spotify user account (Premium or Free). To do that, simply sign up at www.spotify.com.
 
-When you have a user account, go to the Dashboard page at the Spotify Developer website and, if necessary, log in. Accept the latest Developer Terms of Service to complete your account set up.
+When you have a user account, go to the Dashboard page at the Spotify Developer website https://developer.spotify.com/dashboard/applications create an APP and get your CLIENT_ID and your CLIENT_SECRET. 
 
 # Set Up Your Account (Genius)
 
 To use Genius API you will need a token. Create a account https://genius.com/signup_or_login
 
-Then setup your infos at "New Api Client" and get your "ACCESS TOKEN"
+Then acess https://genius.com/api-clients setup your APP infos at "New Api Client". Then go to "ALL Api Clients" and look for "Generate Acess Token".
 
 # Setting using Docker
 
