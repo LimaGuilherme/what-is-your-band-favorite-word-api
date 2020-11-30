@@ -12,6 +12,7 @@ cache_folder/
 dev/
 .idea/
 .github/
+.env.test
 .env
 data/
 .env.deploy

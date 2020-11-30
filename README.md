@@ -12,35 +12,29 @@ Then setup your infos at "New Api Client" and get your "ACCESS TOKEN"
 
 # Setting using Docker
 
-    $ cp .env.sample .env #change your fvariables
+    $ cp .env.sample .env #change your variables
     $ docker-compose up --build -d
 
 # Running
 
-    $ docker-compose up
+    $ docker-compose --env-file .env up
 
 # Running tests
+    $ docker-compose --env-file .env-test up
     $ docker exec -it wiybfw-api bash
     $ python -m unittest
- 
- # Installing Local
- 
-    Requirements
-    
-     Linux
-     Python 3.9
-     Elasticsearch 7+
-     MongoDB
-     
-    $ cp .env.sample .env
-    $ python3.8 -m venv wiybfw-api
-    $ source wiybfw-api/bin/activate
-    $ pip install -r requirements.txt
-    $ export $(cat .env | xargs)
-    $ flask run
-    
 
+# Usage
 
+# METHOD POST
+Use to save all lyrics in your choosen repository:
+
+    $ curl -X POST "http://0.0.0.0:6669/api/artists/Queen/lyrics" 
+
+# METHOD GET
+Use to get term frequency lyrics in your choosen repository:
+
+    $ curl -X GET "http://0.0.0.0:6669/api/artists/Queen/lyrics" 
 
 # Authors
 Guilherme Lima - Initial work
