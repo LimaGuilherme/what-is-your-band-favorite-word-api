@@ -24,11 +24,8 @@ class ESStaticsCount(StatisticCount):
         if not lyrics_list:
             raise exceptions.LyricsNotFound
 
-        docs_ids = []
+        docs_ids = [str(lyrics.id) for lyrics in lyrics_list]
         result = {}
-
-        for lyrics in lyrics_list:
-            docs_ids.append(str(lyrics.id))
 
         es_result = self.__elastic_search_repository.find_terms(docs_ids)
 

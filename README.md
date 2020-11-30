@@ -15,60 +15,6 @@
     $ flask run
     
 
-# Dependencies #1 - ElasticSearch Index
-
-    Assuming you alredy have ElasticSearch and Kibana running. Create the Index below:
-
-    PUT /lyrics
-    {
-      "mappings": {
-        "_doc": {
-          "properties": {
-            "lyrics": {
-              "type": "text",
-              "term_vector": "with_positions_offsets_payloads",
-              "store": true,
-              "analyzer": "custom_analyzer"
-            },
-            "artits": {
-              "type": "text",
-              "term_vector": "with_positions_offsets_payloads",
-              "analyzer": "custom_analyzer"
-            },
-            "album": {
-              "type": "text",
-              "term_vector": "with_positions_offsets_payloads",
-              "analyzer": "custom_analyzer"
-            },
-            "track": {
-              "type": "text",
-              "term_vector": "with_positions_offsets_payloads",
-              "analyzer": "custom_analyzer"
-            }
-          }
-        }
-      },
-      "settings": {
-        "index": {
-          "number_of_shards": 1,
-          "number_of_replicas": 0
-        },
-        "analysis": {
-          "analyzer": {
-            "custom_analyzer": {
-              "type": "custom",
-              "tokenizer": "whitespace",
-              "filter": [
-                "lowercase",
-                "type_as_payload",
-                "custom_stop_words"
-              ]
-            }
-          }
-        }
-      }
-    }
-    
    
    # Built With
 * Coveralls - Python interface to coveralls.io API

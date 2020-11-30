@@ -19,6 +19,8 @@ class Config(object):
     MONGO_HOST = os.environ['MONGO_HOST']
     MONGO_PORT = os.environ['MONGO_PORT']
     REPOSITORY = os.environ['REPOSITORY']
+    ELASTICSEARCH_INDEX = os.environ['ELASTICSEARCH_INDEX']
+    MONGO_COLLECTION = os.environ['MONGO_COLLECTION']
 
 
 class DevelopmentConfig(Config):

@@ -2,7 +2,7 @@ import elasticsearch
 import pymongo
 
 from elasticsearch_dsl.connections import connections as es_connections
-from elasticsearch_dsl import Document, Text
+from elasticsearch_dsl import Document, Text, Index
 from typing import List
 
 from src import exceptions
@@ -12,6 +12,48 @@ from src import configurations as config_module
 
 config = config_module.get_config()
 
+MAPPING = {
+    "properties": {
+        "lyrics": {
+            "type": "text",
+            "term_vector": "with_positions_offsets_payloads",
+            "store": True,
+            "analyzer": "custom_analyzer"
+        },
+        "artits": {
+            "type": "text",
+            "term_vector": "with_positions_offsets_payloads",
+            "analyzer": "custom_analyzer"
+        },
+        "album": {
+            "type": "text",
+            "term_vector": "with_positions_offsets_payloads",
+            "analyzer": "custom_analyzer"
+        },
+        "track": {
+            "type": "text",
+            "term_vector": "with_positions_offsets_payloads",
+            "analyzer": "custom_analyzer"
+        }
+    }
+}
+
+SETTINGS = {
+    "index": {"refresh_interval": -1},
+    "analysis": {
+        "analyzer": {
+            "custom_analyzer": {
+                "type": "custom",
+                "tokenizer": "whitespace",
+                "filter": [
+                    "lowercase",
+                    "type_as_payload",
+                ]
+            }
+        }
+    }
+}
+
 
 class ElasticSearchRepository(object):
 
@@ -19,7 +61,7 @@ class ElasticSearchRepository(object):
         self.__elastic_search_connection = elastic_search_connection
 
     def find_terms(self, docs_ids: List[str]):
-        return self.__elastic_search_connection.mtermvectors(index='lyrics',
+        return self.__elastic_search_connection.mtermvectors(index=config.ELASTICSEARCH_INDEX,
                                                              ids=docs_ids,
                                                              fields=['lyrics'],
                                                              field_statistics=False,
@@ -27,6 +69,9 @@ class ElasticSearchRepository(object):
                                                              payloads=True)
 
     def save(self, lyrics: Lyrics) -> None:
+        if not self.__elastic_search_connection.indices.exists(config.ELASTICSEARCH_INDEX):
+            self.create_index()
+
         lyrics_document = ESLyricsDocument(artist=lyrics.artist,
                                            lyrics=lyrics.lyrics,
                                            track=lyrics.track,
@@ -39,6 +84,21 @@ class ElasticSearchRepository(object):
         except Exception as ex:
             print('ex generica', ex)
             return str(ex)
+
+    def create_index(self):
+        index = Index(name=config.ELASTICSEARCH_INDEX)
+        index.create()
+        self.__elastic_search_connection.indices.close(index=config.ELASTICSEARCH_INDEX)
+        self.__elastic_search_connection.indices.put_settings(body=SETTINGS,
+                                                              index=config.ELASTICSEARCH_INDEX)
+        self.__elastic_search_connection.indices.put_mapping(doc_type='document',
+                                                             body=MAPPING,
+                                                             include_type_name=True,
+                                                             index=config.ELASTICSEARCH_INDEX)
+        self.__elastic_search_connection.indices.open(index=config.ELASTICSEARCH_INDEX)
+
+    def delete_index(self):
+        self.__elastic_search_connection.indices.delete(index=config.ELASTICSEARCH_INDEX)
 
     def get_by_artist(self, artist: str) -> List[Lyrics]:
         lyrics_list = []
@@ -69,14 +129,14 @@ class ESLyricsDocument(Document):
     album = Text()
 
     class Index:
-        name = 'lyrics'
+        name = config.ELASTICSEARCH_INDEX
 
 
 class MongoRepository:
 
     def __init__(self, mongo_db):
         self.__mongo_db = mongo_db
-        self.__collection = self.__mongo_db['lyrics']
+        self.__collection = self.__mongo_db[config.MONGO_COLLECTION]
 
     def get_by_artist(self, artist: str) -> List[Lyrics]:
         lyrics_list = []
@@ -88,6 +148,9 @@ class MongoRepository:
                                       lyrics_document['_id'])
                                )
         return lyrics_list
+
+    def delete_collection(self) -> None:
+        self.__collection[config.ELASTICSEARCH_INDEX].drop()
 
     def save(self, lyrics: Lyrics) -> None:
         self.__collection.insert_one(
