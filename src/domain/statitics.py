@@ -53,19 +53,19 @@ class MongoStaticsCount(StatisticCount):
 
         result = {}
         for lyrics in lyrics_list:
-            lyrics_words = lyrics.lyrics.split(' ')
 
-            for lyrics_word in lyrics_words:
-                lyrics_word = lyrics_word.lower()
+            for word in lyrics.words:
+                word = word.lower()
+                word = re.sub(r'\W+', '', word)
 
-                if lyrics_word in STOP_WORDS:
+                if word in STOP_WORDS:
                     continue
 
-                if lyrics_word in result:
-                    result[lyrics_word] += 1
+                if word in result:
+                    result[word] += 1
                     continue
 
-                result[lyrics_word] = 1
+                result[word] = 1
 
         return dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
 
