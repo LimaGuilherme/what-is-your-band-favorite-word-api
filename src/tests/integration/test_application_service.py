@@ -10,17 +10,20 @@ from src.lyrics.statitics import create_statistic
 from src.lyrics.application_service import APIArtistLyricsService
 from src.lyrics.repositories import create_repository, MongoRepository, ElasticSearchRepository
 
+from src import configurations as config_module
+
 
 class TestAPIArtistLyricsService(TestCase):
 
     def setUp(self) -> None:
-        track_searcher = TrackSearcher()
-        albums_searcher = AlbumsSearcher()
-        artist_searcher = ArtistSearcher()
+        self.config = config_module.get_config()
+        track_searcher = TrackSearcher(self.config)
+        albums_searcher = AlbumsSearcher(self.config)
+        artist_searcher = ArtistSearcher(self.config)
         self.repository = create_repository()
         statistic = create_statistic(self.repository)
 
-        lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher)
+        lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher, self.config)
         self.artist_service = APIArtistLyricsService(lyrics_searcher, statistic, self.repository, artist_searcher)
 
     def test_when_count_frequency_should_raise_artist_not_found(self):

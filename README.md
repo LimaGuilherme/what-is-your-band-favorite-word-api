@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/LimaGuilherme/what-is-your-band-favorite-word-api/badge.svg?branch=master)](https://coveralls.io/github/LimaGuilherme/what-is-your-band-favorite-word-api?branch=master)
+
 # Set Up Your Account (Spotify)
 
 To use the Web API, start by creating a Spotify user account (Premium or Free). To do that, simply sign up at www.spotify.com.

@@ -46,7 +46,7 @@ class CLIArtistLyricsService:
         self.statistic = statistic
         self.artist_searcher = artist_searcher
 
-    def count_frequency(self, artist: str) -> dict:
+    def count_frequency(self, artist: str, number_of_terms) -> dict:
         if not self.artist_searcher.is_this_artist_valid(artist):
             raise exceptions.ArtistNotFound
 
@@ -55,4 +55,4 @@ class CLIArtistLyricsService:
         if not lyrics_list:
             raise exceptions.LyricsNotFound
 
-        return self.statistic.count_words_frequency(lyrics_list)
+        return self.statistic.count_words_frequency(lyrics_list, number_of_terms)

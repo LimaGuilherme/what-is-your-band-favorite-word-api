@@ -47,7 +47,7 @@ class ESStaticsCount(StatisticCount):
 
 class CommonStatistical(StatisticCount):
 
-    def count_words_frequency(self, lyrics_list: List[Lyrics]) -> dict:
+    def count_words_frequency(self, lyrics_list: List[Lyrics], number_of_terms=3) -> dict:
         if not lyrics_list:
             raise exceptions.LyricsNotFound
 
@@ -67,7 +67,13 @@ class CommonStatistical(StatisticCount):
 
                 result[word] = 1
 
-        return dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
+        result = dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
+
+        from itertools import islice
+
+        if number_of_terms:
+            return dict(islice(result.items(),10))
+        return result
 
 
 def create_statistic(repository=None):

@@ -19,7 +19,8 @@ def config_credentials(status):
 
 @main.command()
 @click.option('--artist', help='Artist or Band Name')
-def get_lyrics(artist):
+@click.option('--terms-quantity', help='The number of terms you desire')
+def get_lyrics(artist, terms_quantity):
 
     config = config_module.get_config()
     albums_searcher = AlbumsSearcher(config)
@@ -29,5 +30,5 @@ def get_lyrics(artist):
     statistic = create_statistic()
 
     artist_service = CLIArtistLyricsService(lyrics_searcher, statistic, artist_searcher)
-    words_frequency = artist_service.count_frequency(artist)
+    words_frequency = artist_service.count_frequency(artist, terms_quantity)
     click.echo(words_frequency)
