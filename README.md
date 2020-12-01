@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/LimaGuilherme/what-is-your-band-favorite-word-api/badge.svg?branch=master)](https://coveralls.io/github/LimaGuilherme/what-is-your-band-favorite-word-api?branch=master)
+<a href="https://codeclimate.com/github/LimaGuilherme/what-is-your-band-favorite-word-api/maintainability"><img src="https://api.codeclimate.com/v1/badges/4927af0fbe2bc1bf9c29/maintainability" /></a> [![Coverage Status](https://coveralls.io/repos/github/LimaGuilherme/what-is-your-band-favorite-word-api/badge.svg?branch=master)](https://coveralls.io/github/LimaGuilherme/what-is-your-band-favorite-word-api?branch=master) 
 
 # Set Up Your Account (Spotify)
 
