@@ -23,9 +23,6 @@ class ESStaticsCount(StatisticCount):
         self.__elastic_search_repository = elastic_search_repository
 
     def count_words_frequency(self, lyrics_list: List[Lyrics]) -> dict:
-        if not lyrics_list:
-            raise exceptions.LyricsNotFound
-
         docs_ids = [str(lyrics.id) for lyrics in lyrics_list]
         result = {}
 
@@ -47,10 +44,7 @@ class ESStaticsCount(StatisticCount):
 
 class CommonStatistical(StatisticCount):
 
-    def count_words_frequency(self, lyrics_list: List[Lyrics], number_of_terms=3) -> dict:
-        if not lyrics_list:
-            raise exceptions.LyricsNotFound
-
+    def count_words_frequency(self, lyrics_list: List[Lyrics], number_of_terms: int = None) -> dict:
         result = {}
         for lyrics in lyrics_list:
 
@@ -76,7 +70,7 @@ class CommonStatistical(StatisticCount):
         return result
 
 
-def create_statistic(repository=None):
+def create_statistic(repository=None) -> StatisticCount:
 
     if not repository:
         return CommonStatistical()
