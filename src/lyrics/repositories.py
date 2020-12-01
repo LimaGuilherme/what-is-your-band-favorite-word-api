@@ -6,7 +6,7 @@ from elasticsearch_dsl import Document, Text, Index
 from typing import List
 
 from src import exceptions, elastisearch_configurations
-from src.domain.entity import Lyrics
+from src.lyrics.entity import Lyrics
 
 from src import configurations as config_module
 

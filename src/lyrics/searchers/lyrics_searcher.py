@@ -3,19 +3,16 @@ import requests
 from typing import List
 from bs4 import BeautifulSoup
 
-from src import configurations as config_module
-from src.domain.entity import Lyrics
-
-config = config_module.get_config()
+from src.lyrics.entity import Lyrics
 
 
 class LyricsSearcher:
 
-    def __init__(self, albums_searcher, track_searcher):
+    def __init__(self, albums_searcher, track_searcher, configurations):
         self.albums_searcher = albums_searcher
         self.track_searcher = track_searcher
         self.__genius_search_url = 'https://api.genius.com/search'
-        self.__genius_token = config.GENIUS_ACCESS_TOKEN
+        self.__genius_token = configurations.GENIUS_ACCESS_TOKEN
 
     def request_song_info(self, track_name, track_artist):
         return requests.get(url=self.__genius_search_url,

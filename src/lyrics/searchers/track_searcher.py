@@ -4,16 +4,12 @@ import spotipy
 
 from spotipy.oauth2 import SpotifyClientCredentials
 
-from src import configurations as config_module
-
-config = config_module.get_config()
-
 
 class TrackSearcher:
 
-    def __init__(self):
-        client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID,
-                                                              client_secret=config.SPOTIFY_CLIENT_SECRET)
+    def __init__(self, configurations):
+        client_credentials_manager = SpotifyClientCredentials(client_id=configurations.SPOTIFY_CLIENT_ID,
+                                                              client_secret=configurations.SPOTIFY_CLIENT_SECRET)
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
     def get_tracks(self, album: str) -> List[str]:

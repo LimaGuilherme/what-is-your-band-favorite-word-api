@@ -4,6 +4,24 @@ from importlib import import_module
 
 from src import exceptions
 
+class ConfigBase():
+    pass
+
+
+class ConfigCLI:
+    DEBUG = False
+    TESTING = False
+    DEVELOPMENT = False
+    CSRF_ENABLED = True
+    ENVIRONMENT = None
+    SPOTIFY_CLIENT_ID = os.environ['SPOTIFY_CLIENT_ID']
+    SPOTIFY_CLIENT_SECRET = os.environ['SPOTIFY_CLIENT_SECRET']
+    GENIUS_ACCESS_TOKEN = os.environ['GENIUS_ACCESS_TOKEN']
+
+
+class DevelopmentConfigCLI(ConfigCLI):
+    pass
+
 
 class Config(object):
     DEBUG = False

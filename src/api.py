@@ -2,28 +2,28 @@
 
 from flask_restful import Api
 
-from src.domain.searchers import AlbumsSearcher
-from src.domain.searchers import ArtistSearcher
-from src.domain.searchers import LyricsSearcher
-from src.domain.searchers import TrackSearcher
+from src.lyrics.searchers import AlbumsSearcher
+from src.lyrics.searchers import ArtistSearcher
+from src.lyrics.searchers import LyricsSearcher
+from src.lyrics.searchers import TrackSearcher
 
-from src.domain.application_service import ArtistLyricsService
-from src.domain.repositories import create_repository
-from src.domain.statitics import create_statistic
+from src.lyrics.application_service import APIArtistLyricsService
+from src.lyrics.repositories import create_repository
+from src.lyrics.statitics import create_statistic
 
 from src import resources, configurations as config_module
 
-config = config_module.get_config()
+configurations = config_module.get_config()
 
-albums_searcher = AlbumsSearcher()
-track_searcher = TrackSearcher()
+albums_searcher = AlbumsSearcher(configurations)
+track_searcher = TrackSearcher(configurations)
 lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher)
 artist_searcher = ArtistSearcher()
 
 repository = create_repository()
 statistic = create_statistic(repository)
 
-artist_service = ArtistLyricsService(lyrics_searcher, statistic, repository, artist_searcher)
+artist_service = APIArtistLyricsService(lyrics_searcher, statistic, repository, artist_searcher)
 
 
 def create_api(app):

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.domain.searchers import ArtistSearcher
+from src.lyrics.searchers import ArtistSearcher
 
 
 class TestArtistSearcher(TestCase):

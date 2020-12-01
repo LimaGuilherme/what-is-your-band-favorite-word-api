@@ -1,10 +1,10 @@
 from unittest import TestCase, mock
 from unittest.mock import MagicMock
 
-from src.domain.application_service import ArtistLyricsService
+from src.lyrics.application_service import APIArtistLyricsService
 
 
-class TestArtistLyricsService(TestCase):
+class TestAPIArtistLyricsService(TestCase):
 
     def test_count_frequency_works(self):
         lyrics_searcher_mock = MagicMock()
@@ -18,7 +18,7 @@ class TestArtistLyricsService(TestCase):
         repository_mock = MagicMock()
         repository_mock.get_by_artist.return_value = lyrics_list_mock
 
-        artist_lyrics_service = ArtistLyricsService(lyrics_searcher_mock,
+        artist_lyrics_service = APIArtistLyricsService(lyrics_searcher_mock,
                                                     statistic_mock,
                                                     repository_mock,
                                                     artist_searcher_mock)
@@ -39,7 +39,7 @@ class TestArtistLyricsService(TestCase):
 
         repository_mock = MagicMock()
 
-        artist_lyrics_service = ArtistLyricsService(lyrics_searcher_mock,
+        artist_lyrics_service = APIArtistLyricsService(lyrics_searcher_mock,
                                                     statistic_mock,
                                                     repository_mock,
                                                     artist_searcher_mock)

@@ -2,14 +2,10 @@ import spotipy
 
 from spotipy.oauth2 import SpotifyClientCredentials
 
-from src import configurations as config_module
-
-config = config_module.get_config()
-
 
 class ArtistSearcher:
 
-    def __init__(self):
+    def __init__(self, config):
         client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID,
                                                               client_secret=config.SPOTIFY_CLIENT_SECRET)
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)

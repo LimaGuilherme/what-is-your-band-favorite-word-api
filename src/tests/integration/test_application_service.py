@@ -1,17 +1,17 @@
 from unittest import TestCase
 
 from src import exceptions
-from src.domain.searchers import AlbumsSearcher
-from src.domain.searchers import ArtistSearcher
-from src.domain.searchers import LyricsSearcher
-from src.domain.searchers import TrackSearcher
+from src.lyrics.searchers import AlbumsSearcher
+from src.lyrics.searchers import ArtistSearcher
+from src.lyrics.searchers import LyricsSearcher
+from src.lyrics.searchers import TrackSearcher
 
-from src.domain.statitics import create_statistic
-from src.domain.application_service import ArtistLyricsService
-from src.domain.repositories import create_repository, MongoRepository, ElasticSearchRepository
+from src.lyrics.statitics import create_statistic
+from src.lyrics.application_service import APIArtistLyricsService
+from src.lyrics.repositories import create_repository, MongoRepository, ElasticSearchRepository
 
 
-class TestArtistLyricsService(TestCase):
+class TestAPIArtistLyricsService(TestCase):
 
     def setUp(self) -> None:
         track_searcher = TrackSearcher()
@@ -21,7 +21,7 @@ class TestArtistLyricsService(TestCase):
         statistic = create_statistic(self.repository)
 
         lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher)
-        self.artist_service = ArtistLyricsService(lyrics_searcher, statistic, self.repository, artist_searcher)
+        self.artist_service = APIArtistLyricsService(lyrics_searcher, statistic, self.repository, artist_searcher)
 
     def test_when_count_frequency_should_raise_artist_not_found(self):
         with self.assertRaises(exceptions.ArtistNotFound):

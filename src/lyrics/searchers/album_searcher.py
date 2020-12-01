@@ -3,16 +3,12 @@ import spotipy
 from typing import List
 from spotipy.oauth2 import SpotifyClientCredentials
 
-from src import configurations as config_module
-
-config = config_module.get_config()
-
 
 class AlbumsSearcher:
 
-    def __init__(self):
-        client_credentials_manager = SpotifyClientCredentials(client_id=config.SPOTIFY_CLIENT_ID,
-                                                              client_secret=config.SPOTIFY_CLIENT_SECRET)
+    def __init__(self, configurations):
+        client_credentials_manager = SpotifyClientCredentials(client_id=configurations.SPOTIFY_CLIENT_ID,
+                                                              client_secret=configurations.SPOTIFY_CLIENT_SECRET)
         self.__spotify_client = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
     def remove_remaster_and_live_albums(self, albums: List[str]) -> List[str]:

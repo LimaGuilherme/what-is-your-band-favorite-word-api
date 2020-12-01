@@ -4,9 +4,9 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from src import exceptions
-from src.domain.entity import Lyrics
-from src.domain.repositories import MongoRepository, ElasticSearchRepository
-from src.domain.stop_words import STOP_WORDS
+from src.lyrics.entity import Lyrics
+from src.lyrics.repositories import MongoRepository, ElasticSearchRepository
+from src.lyrics.stop_words import STOP_WORDS
 
 
 class StatisticCount(ABC):
@@ -45,7 +45,7 @@ class ESStaticsCount(StatisticCount):
         return dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
 
 
-class MongoStaticsCount(StatisticCount):
+class CommonStatistical(StatisticCount):
 
     def count_words_frequency(self, lyrics_list: List[Lyrics]) -> dict:
         if not lyrics_list:
@@ -70,10 +70,13 @@ class MongoStaticsCount(StatisticCount):
         return dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
 
 
-def create_statistic(repository):
+def create_statistic(repository=None):
+
+    if not repository:
+        return CommonStatistical()
 
     if isinstance(repository, MongoRepository):
-        return MongoStaticsCount()
+        return CommonStatistical()
 
     if isinstance(repository, ElasticSearchRepository):
         return ESStaticsCount(repository)
