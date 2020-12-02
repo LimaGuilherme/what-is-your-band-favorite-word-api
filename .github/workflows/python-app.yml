@@ -40,8 +40,8 @@ jobs:
         ELASTICSEARCH_USE_SSL: False
         SPOTIFY_CLIENT_ID: None
         SPOTIFY_CLIENT_SECRET: None
-        GENIUS_ACCESS_TOKEN: None:
-        MONGO_HOST: None:
+        GENIUS_ACCESS_TOKEN: None
+        MONGO_HOST: None
         MONGO_PORT: None
         REPOSITORY: mongodb
         ELASTICSEARCH_INDEX: lyrics-test
