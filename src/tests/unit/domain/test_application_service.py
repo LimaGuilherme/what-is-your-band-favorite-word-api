@@ -19,9 +19,9 @@ class TestAPIArtistLyricsService(TestCase):
         repository_mock.get_by_artist.return_value = lyrics_list_mock
 
         artist_lyrics_service = APIArtistLyricsService(lyrics_searcher_mock,
-                                                    statistic_mock,
-                                                    repository_mock,
-                                                    artist_searcher_mock)
+                                                       statistic_mock,
+                                                       repository_mock,
+                                                       artist_searcher_mock)
         result = artist_lyrics_service.count_frequency('Weiss')
 
         repository_mock.get_by_artist.assert_called_with('Weiss')
@@ -40,9 +40,9 @@ class TestAPIArtistLyricsService(TestCase):
         repository_mock = MagicMock()
 
         artist_lyrics_service = APIArtistLyricsService(lyrics_searcher_mock,
-                                                    statistic_mock,
-                                                    repository_mock,
-                                                    artist_searcher_mock)
+                                                       statistic_mock,
+                                                       repository_mock,
+                                                       artist_searcher_mock)
         artist_lyrics_service.index('Weiss')
 
         call1 = mock.call(lyrics_mock1)

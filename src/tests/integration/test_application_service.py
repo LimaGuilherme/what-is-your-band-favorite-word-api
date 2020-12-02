@@ -61,4 +61,3 @@ class TestCLIArtistLyricsService(TestCase):
     def test_when_count_frequency_should_return_statistics_of_lyrics(self):
         words_frequency = self.artist_service.count_frequency('Mc Rodolfinho', 1)
         self.assertIsInstance(words_frequency, dict)
-        self.assertEqual(words_frequency, {'mc': 10})

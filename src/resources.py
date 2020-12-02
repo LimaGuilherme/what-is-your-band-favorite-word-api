@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import re
-
 from functools import wraps
 from flask import Response
 from flask_restful import Resource
@@ -19,11 +17,6 @@ def not_allowed(f):
 
 
 class ResourceBase(Resource):
-
-    @staticmethod
-    def camel_to_snake(name):
-        s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-        return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
     @staticmethod
     def snake_to_camel(name):
@@ -65,12 +58,6 @@ class ResourceBase(Resource):
     def return_unexpected_error(self, exception=None):
         return {'result': 'error', 'error': 'General Error', 'exception': str(exception)}, 500
 
-    def return_artist_not_send(self, exception=None):
-        return {'result': 'error', 'error': 'Artist Not Received', 'exception': str(exception)}, 400
-
-    def return_invalid_repository(self):
-        return {'result': 'error', 'error': 'Invalid Repository, You should use elasticsearch or mongodb'}, 405
-
 
 class ArtistResource(ResourceBase):
 
@@ -94,6 +81,8 @@ class ArtistResource(ResourceBase):
             return self.return_ok()
         except exceptions.LyricsNotFound:
             return self.return_no_lyrics_were_found()
+        except exceptions.ArtistNotFound:
+            return self.return_no_artist_found()
 
     @not_allowed
     def delete(self):

@@ -17,8 +17,8 @@ configurations = config_module.get_config()
 
 albums_searcher = AlbumsSearcher(configurations)
 track_searcher = TrackSearcher(configurations)
-lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher)
-artist_searcher = ArtistSearcher()
+lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher, configurations)
+artist_searcher = ArtistSearcher(configurations)
 
 repository = create_repository()
 statistic = create_statistic(repository)
