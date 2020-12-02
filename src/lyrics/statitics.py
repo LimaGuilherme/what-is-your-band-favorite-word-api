@@ -66,7 +66,7 @@ class CommonStatistical(StatisticCount):
         from itertools import islice
 
         if number_of_terms:
-            return dict(islice(result.items(),10))
+            return dict(islice(result.items(), number_of_terms))
         return result
 
 
