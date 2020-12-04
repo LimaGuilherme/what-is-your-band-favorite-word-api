@@ -40,3 +40,7 @@ class InvalidRepository(Exception):
 
 class ArtistNotFound(Exception):
     pass
+
+
+class ConfigError(Exception):
+    pass

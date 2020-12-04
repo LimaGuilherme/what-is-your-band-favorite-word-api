@@ -1,6 +1,11 @@
+from dataclasses import dataclass, asdict
+from abc import ABC
+import json
 import os
 
 from importlib import import_module
+
+from src.exceptions import ConfigError
 
 
 class ConfigCLI:
@@ -56,17 +61,16 @@ def get_config():
     return config_class()
 
 
-from dataclasses import dataclass
-from abc import ABC
-
-
 @dataclass
 class Config(ABC):
     DEBUG: bool
-    ENVIRONMENT: str
     SPOTIFY_CLIENT_ID: str
     SPOTIFY_CLIENT_SECRET: str
     GENIUS_ACCESS_TOKEN: str
+
+    @property
+    def as_dict(self):
+        return asdict(self)
 
 
 @dataclass
@@ -83,3 +87,49 @@ class FullConfig(Config):
     REPOSITORY: str
     ELASTICSEARCH_INDEX: str
     MONGO_COLLECTION: str
+
+
+class EnvFullConfigRepository:
+
+    def get(self) -> FullConfig:
+        try:
+            return FullConfig(
+                DEBUG=False,
+                SPOTIFY_CLIENT_ID=os.environ['SPOTIFY_CLIENT_ID'],
+                SPOTIFY_CLIENT_SECRET=os.environ['SPOTIFY_CLIENT_SECRET'],
+                ELASTICSEARCH_HOST=os.environ['ELASTICSEARCH_HOST'],
+                ELASTICSEARCH_PORT=os.environ['ELASTICSEARCH_PORT'],
+                GENIUS_ACCESS_TOKEN=os.environ['GENIUS_ACCESS_TOKEN'],
+                MONGO_HOST=os.environ['MONGO_HOST'],
+                MONGO_PORT=os.environ['MONGO_PORT'],
+                REPOSITORY=os.environ['REPOSITORY'],
+                ELASTICSEARCH_INDEX=os.environ['ELASTICSEARCH_INDEX'],
+                MONGO_COLLECTION=os.environ['MONGO_COLLECTION'],
+            )
+        except KeyError:
+            raise ConfigError('Cant get config from env because one envvar is missing')
+        except TypeError:
+            raise ConfigError('Cant get config from env because one envvar is missing')
+
+
+class LocalStorageSimpleConfigRepository:
+
+    def __init__(self):
+        self.__filename = '.localstorage'
+
+    def get(self) -> SimpleConfig:
+        with open(self.__filename, 'r') as localstorage:
+            data = json.load(localstorage)
+            try:
+                return SimpleConfig(**data)
+            except TypeError:
+                raise ConfigError('Cant get config from localstorage because one envvar is missing')
+
+    def save(self, simple_config: SimpleConfig) -> None:
+        try:
+            os.remove(self.__filename)
+        except OSError:
+            pass
+
+        with open(self.__filename, 'w') as localstorage:
+            json.dump(simple_config.as_dict, localstorage)
