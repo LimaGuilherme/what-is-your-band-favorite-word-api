@@ -133,3 +133,18 @@ class LocalStorageSimpleConfigRepository:
 
         with open(self.__filename, 'w') as localstorage:
             json.dump(simple_config.as_dict, localstorage)
+
+
+def create_config(config_type) -> Config:
+    if config_type == 'simple':
+        repository = LocalStorageSimpleConfigRepository()
+        simple_config = repository.get()
+        return simple_config
+
+    if config_type == 'full':
+        repository = EnvFullConfigRepository()
+        full_config = repository.get()
+        return full_config
+
+    raise ConfigError(f'Cant create config because the config_type {config_type} '
+                      f'is invalid. Valid options: simple, full.')

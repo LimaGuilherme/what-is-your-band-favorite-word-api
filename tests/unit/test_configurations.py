@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.configurations import SimpleConfig, FullConfig
+from src.configurations import SimpleConfig, FullConfig, create_config
 
 
 class TestSimpleConfig(TestCase):
