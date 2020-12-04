@@ -84,7 +84,6 @@ FULL_ENV_VARS = (
 
 @dataclass
 class Config(ABC):
-    DEBUG: bool
     SPOTIFY_CLIENT_ID: str
     SPOTIFY_CLIENT_SECRET: str
     GENIUS_ACCESS_TOKEN: str
@@ -113,23 +112,19 @@ class FullConfig(Config):
 class EnvFullConfigRepository:
 
     def get(self) -> FullConfig:
-        try:
+        config_dict = {}
 
-            config_dict = {'DEBUG': False}
+        missing_env_vars = []
+        for env_var in FULL_ENV_VARS:
+            try:
+                config_dict[env_var] = os.environ[env_var]
+            except KeyError:
+                missing_env_vars.append(env_var)
 
-            missing_env_vars = []
-            for env_var in FULL_ENV_VARS:
-                try:
-                    config_dict[env_var] = os.environ[env_var]
-                except KeyError:
-                    missing_env_vars.append(env_var)
+        if len(missing_env_vars) > 0:
+            raise ConfigError(f'Environment variables missing: {missing_env_vars}')
 
-            if len(missing_env_vars) > 0:
-                raise ConfigError(f'Environment variables missing: {missing_env_vars}')
-
-            return FullConfig(**config_dict)
-        except TypeError:
-            raise ConfigError('Cant get config from env because one envvar is missing')
+        return FullConfig(**config_dict)
 
 
 class LocalStorageSimpleConfigRepository:

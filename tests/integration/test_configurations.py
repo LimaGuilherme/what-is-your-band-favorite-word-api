@@ -25,7 +25,6 @@ class TestEnvFullConfigRepository(TestCase):
         repository = EnvFullConfigRepository()
         full_config = repository.get()
 
-        self.assertFalse(full_config.DEBUG)
         self.assertEqual(full_config.SPOTIFY_CLIENT_ID, 'V1')
         self.assertEqual(full_config.SPOTIFY_CLIENT_SECRET, 'V2')
         self.assertEqual(full_config.ELASTICSEARCH_HOST, 'V3')
@@ -62,7 +61,6 @@ class TestLocalFileSimpleConfigRepository(TestCase):
     def test_should_save(self):
         config_repository = LocalStorageSimpleConfigRepository()
         simple_config = SimpleConfig(
-            DEBUG=True,
             SPOTIFY_CLIENT_ID='fdsafsad',
             SPOTIFY_CLIENT_SECRET='FDSJOIdsja',
             GENIUS_ACCESS_TOKEN='aoijaa78',
@@ -72,7 +70,6 @@ class TestLocalFileSimpleConfigRepository(TestCase):
     def test_should_get(self):
         config_repository = LocalStorageSimpleConfigRepository()
         simple_config = SimpleConfig(
-            DEBUG=True,
             SPOTIFY_CLIENT_ID='fdsafsad',
             SPOTIFY_CLIENT_SECRET='FDSJOIdsja',
             GENIUS_ACCESS_TOKEN='aoijaa78',
@@ -122,7 +119,6 @@ class TestCreateConfig(TestCase):
     def test_should_create_simple_config(self):
         config_repository = LocalStorageSimpleConfigRepository()
         simple_config = SimpleConfig(
-            DEBUG=False,
             SPOTIFY_CLIENT_ID='fdsafsad',
             SPOTIFY_CLIENT_SECRET='FDSJOIdsja',
             GENIUS_ACCESS_TOKEN='aoijaa78',
@@ -131,7 +127,6 @@ class TestCreateConfig(TestCase):
 
         simple_config = create_config('simple')
         self.assertIsInstance(simple_config, SimpleConfig)
-        self.assertFalse(simple_config.DEBUG)
         self.assertEqual(simple_config.SPOTIFY_CLIENT_ID, 'fdsafsad')
         self.assertEqual(simple_config.SPOTIFY_CLIENT_SECRET, 'FDSJOIdsja')
         self.assertEqual(simple_config.GENIUS_ACCESS_TOKEN, 'aoijaa78')
@@ -153,7 +148,6 @@ class TestCreateConfig(TestCase):
 
         full_config = create_config('full')
         self.assertIsInstance(full_config, FullConfig)
-        self.assertFalse(full_config.DEBUG)
         self.assertEqual(full_config.SPOTIFY_CLIENT_ID, 'V1')
         self.assertEqual(full_config.SPOTIFY_CLIENT_SECRET, 'V2')
         self.assertEqual(full_config.ELASTICSEARCH_HOST, 'V3')
