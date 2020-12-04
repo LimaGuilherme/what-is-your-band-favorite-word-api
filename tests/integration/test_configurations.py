@@ -95,7 +95,7 @@ class TestLocalFileSimpleConfigRepository(TestCase):
             config_repository.get()
 
         self.assertEqual(
-            'Cant get config from localstorage because one variable is missing',
+            "Variables missing: ['SPOTIFY_CLIENT_SECRET', 'GENIUS_ACCESS_TOKEN']",
             str(context_manager.exception)
         )
 

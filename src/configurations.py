@@ -61,7 +61,14 @@ def get_config():
     return config_class()
 
 
-ENV_VARS = (
+SIMPLE_ENV_VARS = (
+    'SPOTIFY_CLIENT_ID',
+    'SPOTIFY_CLIENT_SECRET',
+    'GENIUS_ACCESS_TOKEN'
+)
+
+
+FULL_ENV_VARS = (
     'SPOTIFY_CLIENT_ID',
     'SPOTIFY_CLIENT_SECRET',
     'ELASTICSEARCH_HOST',
@@ -73,6 +80,7 @@ ENV_VARS = (
     'ELASTICSEARCH_INDEX',
     'MONGO_COLLECTION',
 )
+
 
 @dataclass
 class Config(ABC):
@@ -110,7 +118,7 @@ class EnvFullConfigRepository:
             config_dict = {'DEBUG': False}
 
             missing_env_vars = []
-            for env_var in ENV_VARS:
+            for env_var in FULL_ENV_VARS:
                 try:
                     config_dict[env_var] = os.environ[env_var]
                 except KeyError:
@@ -134,10 +142,16 @@ class LocalStorageSimpleConfigRepository:
             with open(self.__filename, 'r') as localstorage:
                 data = json.load(localstorage)
 
-                try:
-                    return SimpleConfig(**data)
-                except TypeError:
-                    raise ConfigError('Cant get config from localstorage because one variable is missing')
+                missing_env_vars = []
+                for env_var in SIMPLE_ENV_VARS:
+                    if not data.get(env_var):
+                        missing_env_vars.append(env_var)
+
+                if len(missing_env_vars) > 0:
+                    raise ConfigError(f'Variables missing: {missing_env_vars}')
+
+                return SimpleConfig(**data)
+
         except FileNotFoundError:
             raise ConfigError('Cant get config because config file was not found. Try to config variables again')
 
