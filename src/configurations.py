@@ -118,12 +118,16 @@ class LocalStorageSimpleConfigRepository:
         self.__filename = '.localstorage'
 
     def get(self) -> SimpleConfig:
-        with open(self.__filename, 'r') as localstorage:
-            data = json.load(localstorage)
-            try:
-                return SimpleConfig(**data)
-            except TypeError:
-                raise ConfigError('Cant get config from localstorage because one envvar is missing')
+        try:
+            with open(self.__filename, 'r') as localstorage:
+                data = json.load(localstorage)
+
+                try:
+                    return SimpleConfig(**data)
+                except TypeError:
+                    raise ConfigError('Cant get config from localstorage because one variable is missing')
+        except FileNotFoundError:
+            raise ConfigError('Cant get config because config file was not found. Try to config variables again')
 
     def save(self, simple_config: SimpleConfig) -> None:
         try:

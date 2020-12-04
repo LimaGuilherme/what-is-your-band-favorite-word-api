@@ -1,3 +1,4 @@
+import os
 from unittest import TestCase, mock
 
 from src.configurations import LocalStorageSimpleConfigRepository, EnvFullConfigRepository, SimpleConfig, create_config, FullConfig
@@ -83,8 +84,30 @@ class TestLocalFileSimpleConfigRepository(TestCase):
 
         config_repository.save(simple_config_mock)
 
-        with self.assertRaises(ConfigError):
+        with self.assertRaises(ConfigError) as context_manager:
             config_repository.get()
+
+        self.assertEqual(
+            'Cant get config from localstorage because one variable is missing',
+            str(context_manager.exception)
+        )
+
+    def test_get_should_raise_config_error_when_there_is_no_localstorage_file(self):
+        config_repository = LocalStorageSimpleConfigRepository()
+
+        with self.assertRaises(ConfigError) as context_manager:
+            config_repository.get()
+
+        self.assertEqual(
+            'Cant get config because config file was not found. Try to config variables again',
+            str(context_manager.exception)
+        )
+
+    def tearDown(self) -> None:
+        try:
+            os.remove('.localstorage')
+        except OSError:
+            pass
 
 
 class TestCreateConfig(TestCase):
