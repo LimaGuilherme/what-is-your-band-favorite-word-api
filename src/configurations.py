@@ -54,3 +54,32 @@ def get_config():
     config_module = import_module('.'.join(config_imports[:-1]))
     config_class = getattr(config_module, config_class_name, None)
     return config_class()
+
+
+from dataclasses import dataclass
+from abc import ABC
+
+
+@dataclass
+class Config(ABC):
+    DEBUG: bool
+    ENVIRONMENT: str
+    SPOTIFY_CLIENT_ID: str
+    SPOTIFY_CLIENT_SECRET: str
+    GENIUS_ACCESS_TOKEN: str
+
+
+@dataclass
+class SimpleConfig(Config):
+    pass
+
+
+@dataclass
+class FullConfig(Config):
+    ELASTICSEARCH_HOST: str
+    ELASTICSEARCH_PORT: str
+    MONGO_HOST: str
+    MONGO_PORT: str
+    REPOSITORY: str
+    ELASTICSEARCH_INDEX: str
+    MONGO_COLLECTION: str
