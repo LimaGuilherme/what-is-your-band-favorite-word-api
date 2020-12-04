@@ -45,9 +45,16 @@ class TestEnvFullConfigRepository(TestCase):
             'ELASTICSEARCH_HOST': 'V3'
         }
 
-        with self.assertRaises(ConfigError):
-            repository = EnvFullConfigRepository()
+        repository = EnvFullConfigRepository()
+
+        with self.assertRaises(ConfigError) as context_manager:
             repository.get()
+
+        self.assertEqual(
+            "Environment variables missing: ['ELASTICSEARCH_PORT', 'GENIUS_ACCESS_TOKEN', 'MONGO_HOST', "
+            "'MONGO_PORT', 'REPOSITORY', 'ELASTICSEARCH_INDEX', 'MONGO_COLLECTION']",
+            str(context_manager.exception)
+        )
 
 
 class TestLocalFileSimpleConfigRepository(TestCase):

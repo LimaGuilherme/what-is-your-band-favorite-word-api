@@ -61,6 +61,19 @@ def get_config():
     return config_class()
 
 
+ENV_VARS = (
+    'SPOTIFY_CLIENT_ID',
+    'SPOTIFY_CLIENT_SECRET',
+    'ELASTICSEARCH_HOST',
+    'ELASTICSEARCH_PORT',
+    'GENIUS_ACCESS_TOKEN',
+    'MONGO_HOST',
+    'MONGO_PORT',
+    'REPOSITORY',
+    'ELASTICSEARCH_INDEX',
+    'MONGO_COLLECTION',
+)
+
 @dataclass
 class Config(ABC):
     DEBUG: bool
@@ -93,21 +106,20 @@ class EnvFullConfigRepository:
 
     def get(self) -> FullConfig:
         try:
-            return FullConfig(
-                DEBUG=False,
-                SPOTIFY_CLIENT_ID=os.environ['SPOTIFY_CLIENT_ID'],
-                SPOTIFY_CLIENT_SECRET=os.environ['SPOTIFY_CLIENT_SECRET'],
-                ELASTICSEARCH_HOST=os.environ['ELASTICSEARCH_HOST'],
-                ELASTICSEARCH_PORT=os.environ['ELASTICSEARCH_PORT'],
-                GENIUS_ACCESS_TOKEN=os.environ['GENIUS_ACCESS_TOKEN'],
-                MONGO_HOST=os.environ['MONGO_HOST'],
-                MONGO_PORT=os.environ['MONGO_PORT'],
-                REPOSITORY=os.environ['REPOSITORY'],
-                ELASTICSEARCH_INDEX=os.environ['ELASTICSEARCH_INDEX'],
-                MONGO_COLLECTION=os.environ['MONGO_COLLECTION'],
-            )
-        except KeyError:
-            raise ConfigError('Cant get config from env because one envvar is missing')
+
+            config_dict = {'DEBUG': False}
+
+            missing_env_vars = []
+            for env_var in ENV_VARS:
+                try:
+                    config_dict[env_var] = os.environ[env_var]
+                except KeyError:
+                    missing_env_vars.append(env_var)
+
+            if len(missing_env_vars) > 0:
+                raise ConfigError(f'Environment variables missing: {missing_env_vars}')
+
+            return FullConfig(**config_dict)
         except TypeError:
             raise ConfigError('Cant get config from env because one envvar is missing')
 
