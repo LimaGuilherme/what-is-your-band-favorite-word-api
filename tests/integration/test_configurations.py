@@ -50,7 +50,7 @@ class TestEnvFullConfigRepository(TestCase):
             repository.get()
 
         self.assertEqual(
-            "Environment variables missing: ['ELASTICSEARCH_PORT', 'GENIUS_ACCESS_TOKEN', 'MONGO_HOST', "
+            "Environment variables missing: ['GENIUS_ACCESS_TOKEN', 'ELASTICSEARCH_PORT', 'MONGO_HOST', "
             "'MONGO_PORT', 'REPOSITORY', 'ELASTICSEARCH_INDEX', 'MONGO_COLLECTION']",
             str(context_manager.exception)
         )
