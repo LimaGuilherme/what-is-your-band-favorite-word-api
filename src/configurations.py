@@ -1,66 +1,22 @@
-from dataclasses import dataclass, asdict, fields as dataclasses_fields
-from abc import ABC
 import json
 import os
 
-from importlib import import_module
-from typing import Tuple
+from dataclasses import dataclass, asdict, fields as dataclasses_fields
+from abc import ABC
+
+from typing import Tuple, Union
 
 from src.exceptions import ConfigError
 
+__all__ = [
+    'create_simple_config',
+    'get_config',
+    'SimpleConfig',
+    'FullConfig'
+]
 
-class ConfigCLI:
-    DEBUG = False
-    TESTING = False
-    DEVELOPMENT = False
-    CSRF_ENABLED = True
-    ENVIRONMENT = None
-    SPOTIFY_CLIENT_ID = os.environ['SPOTIFY_CLIENT_ID']
-    SPOTIFY_CLIENT_SECRET = os.environ['SPOTIFY_CLIENT_SECRET']
-    GENIUS_ACCESS_TOKEN = os.environ['GENIUS_ACCESS_TOKEN']
-
-
-class DevelopmentConfigCLI(ConfigCLI):
-    pass
-
-
-class Config(object):
-    DEBUG = False
-    TESTING = False
-    DEVELOPMENT = False
-    CSRF_ENABLED = True
-    ENVIRONMENT = None
-    SPOTIFY_CLIENT_ID = os.environ['SPOTIFY_CLIENT_ID']
-    SPOTIFY_CLIENT_SECRET = os.environ['SPOTIFY_CLIENT_SECRET']
-    ELASTICSEARCH_HOST = os.environ['ELASTICSEARCH_HOST']
-    ELASTICSEARCH_PORT = os.environ['ELASTICSEARCH_PORT']
-    GENIUS_ACCESS_TOKEN = os.environ['GENIUS_ACCESS_TOKEN']
-    MONGO_HOST = os.environ['MONGO_HOST']
-    MONGO_PORT = os.environ['MONGO_PORT']
-    REPOSITORY = os.environ['REPOSITORY']
-    ELASTICSEARCH_INDEX = os.environ['ELASTICSEARCH_INDEX']
-    MONGO_COLLECTION = os.environ['MONGO_COLLECTION']
-
-
-class DevelopmentConfig(Config):
-    ENVIRONMENT = 'development'
-    DEVELOPMENT = True
-    DEBUG = True
-    SQLALCHEMY_RECORD_QUERIES = True
-
-
-class TestingConfig(DevelopmentConfig):
-    ENVIRONMENT = 'test'
-    TESTING = True
-
-
-def get_config():
-    config_imports = os.environ['APP_SETTINGS'].split('.')
-    config_class_name = config_imports[-1]
-    config_module = import_module('.'.join(config_imports[:-1]))
-    config_class = getattr(config_module, config_class_name, None)
-    return config_class()
-
+full_config = None
+simple_config = None
 
 
 @dataclass
@@ -158,13 +114,32 @@ class LocalStorageSimpleConfigRepository:
         return missing_vars
 
 
-def create_config(config_type) -> Config:
+def create_simple_config(spotify_client_id, spotify_client_secret, genius_access_token) -> None:
+    config_repository = LocalStorageSimpleConfigRepository()
+    simple_config = SimpleConfig(
+        SPOTIFY_CLIENT_ID=spotify_client_id,
+        SPOTIFY_CLIENT_SECRET=spotify_client_secret,
+        GENIUS_ACCESS_TOKEN=genius_access_token,
+    )
+    config_repository.save(simple_config)
+
+
+def get_config(config_type: str) -> Union[SimpleConfig, FullConfig]:
+    global full_config
+    global simple_config
+
     if config_type == 'simple':
+        if simple_config:
+            return simple_config
+
         repository = LocalStorageSimpleConfigRepository()
         simple_config = repository.get()
         return simple_config
 
     if config_type == 'full':
+        if full_config:
+            return full_config
+
         repository = EnvFullConfigRepository()
         full_config = repository.get()
         return full_config

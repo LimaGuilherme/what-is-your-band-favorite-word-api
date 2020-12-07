@@ -1,14 +1,14 @@
 import os
 from unittest import TestCase, mock
 
-from src.configurations import LocalStorageSimpleConfigRepository, EnvFullConfigRepository, SimpleConfig, create_config, FullConfig
+from src.configurations import LocalStorageSimpleConfigRepository, EnvFullConfigRepository, SimpleConfig, get_config, FullConfig, create_simple_config
 from src.exceptions import ConfigError
 
 
 class TestEnvFullConfigRepository(TestCase):
 
     @mock.patch('src.configurations.os')
-    def test_should_get(self, os_mock):
+    def test_should_get_full_config(self, os_mock):
         os_mock.environ = {
             'SPOTIFY_CLIENT_ID': 'V1',
             'SPOTIFY_CLIENT_SECRET': 'V2',
@@ -58,7 +58,7 @@ class TestEnvFullConfigRepository(TestCase):
 
 class TestLocalFileSimpleConfigRepository(TestCase):
 
-    def test_should_save(self):
+    def test_should_save_simple_config(self):
         config_repository = LocalStorageSimpleConfigRepository()
         simple_config = SimpleConfig(
             SPOTIFY_CLIENT_ID='fdsafsad',
@@ -125,14 +125,27 @@ class TestCreateConfig(TestCase):
         )
         config_repository.save(simple_config)
 
-        simple_config = create_config('simple')
+        simple_config = get_config('simple')
         self.assertIsInstance(simple_config, SimpleConfig)
         self.assertEqual(simple_config.SPOTIFY_CLIENT_ID, 'fdsafsad')
         self.assertEqual(simple_config.SPOTIFY_CLIENT_SECRET, 'FDSJOIdsja')
         self.assertEqual(simple_config.GENIUS_ACCESS_TOKEN, 'aoijaa78')
 
+    def test_should_cache_simple_config(self):
+        config_repository = LocalStorageSimpleConfigRepository()
+        simple_config = SimpleConfig(
+            SPOTIFY_CLIENT_ID='fdsafsad',
+            SPOTIFY_CLIENT_SECRET='FDSJOIdsja',
+            GENIUS_ACCESS_TOKEN='aoijaa78',
+        )
+        config_repository.save(simple_config)
+
+        first_simple_config = get_config('simple')
+        second_simple_config = get_config('simple')
+        self.assertEqual(id(first_simple_config), id(second_simple_config))
+
     @mock.patch('src.configurations.os')
-    def test_should_create_full_config(self, os_mock):
+    def test_should_cache_full_config(self, os_mock):
         os_mock.environ = {
             'SPOTIFY_CLIENT_ID': 'V1',
             'SPOTIFY_CLIENT_SECRET': 'V2',
@@ -146,7 +159,26 @@ class TestCreateConfig(TestCase):
             'MONGO_COLLECTION': 'V10'
         }
 
-        full_config = create_config('full')
+        first_full_config = get_config('full')
+        second_full_config = get_config('full')
+        self.assertEqual(id(first_full_config), id(second_full_config))
+
+    @mock.patch('src.configurations.os')
+    def test_should_get_full_config(self, os_mock):
+        os_mock.environ = {
+            'SPOTIFY_CLIENT_ID': 'V1',
+            'SPOTIFY_CLIENT_SECRET': 'V2',
+            'ELASTICSEARCH_HOST': 'V3',
+            'ELASTICSEARCH_PORT': 'V4',
+            'GENIUS_ACCESS_TOKEN': 'V5',
+            'MONGO_HOST': 'V6',
+            'MONGO_PORT': 'V7',
+            'REPOSITORY': 'V8',
+            'ELASTICSEARCH_INDEX': 'V9',
+            'MONGO_COLLECTION': 'V10'
+        }
+
+        full_config = get_config('full')
         self.assertIsInstance(full_config, FullConfig)
         self.assertEqual(full_config.SPOTIFY_CLIENT_ID, 'V1')
         self.assertEqual(full_config.SPOTIFY_CLIENT_SECRET, 'V2')
@@ -161,4 +193,19 @@ class TestCreateConfig(TestCase):
 
     def test_should_raise_config_error_when_config_type_is_invalid(self):
         with self.assertRaises(ConfigError):
-            create_config('fdass')
+            get_config('fdass')
+
+
+class TestCreateSimpleConfig(TestCase):
+
+    def test_should_create_simple_config(self):
+        config_repository = LocalStorageSimpleConfigRepository()
+
+        create_simple_config(spotify_client_id='fdsafsad',
+                             spotify_client_secret='FDSJOIdsja',
+                             genius_access_token='aoijaa78')
+
+        simple_config = config_repository.get()
+        self.assertEqual(simple_config.SPOTIFY_CLIENT_ID, 'fdsafsad')
+        self.assertEqual(simple_config.SPOTIFY_CLIENT_SECRET, 'FDSJOIdsja')
+        self.assertEqual(simple_config.GENIUS_ACCESS_TOKEN, 'aoijaa78')

@@ -13,14 +13,14 @@ from src.lyrics.statitics import create_statistic
 
 from src import resources, configurations as config_module
 
-configurations = config_module.get_config()
+configurations = config_module.create_config(config_type='full')
 
 albums_searcher = AlbumsSearcher(configurations)
 track_searcher = TrackSearcher(configurations)
 lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher, configurations)
 artist_searcher = ArtistSearcher(configurations)
 
-repository = create_repository()
+repository = create_repository(configurations)
 statistic = create_statistic(repository)
 
 artist_service = APIArtistLyricsService(lyrics_searcher, statistic, repository, artist_searcher)

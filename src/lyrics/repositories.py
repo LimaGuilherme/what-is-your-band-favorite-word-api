@@ -10,16 +10,17 @@ from src.lyrics.entity import Lyrics
 
 from src import configurations as config_module
 
-config = config_module.get_config()
+full_config = config_module.get_config('full')
 
 
 class ElasticSearchRepository(object):
 
-    def __init__(self, elastic_search_connection):
+    def __init__(self, elastic_search_connection, configurations):
         self.__elastic_search_connection = elastic_search_connection
+        self.__configurations = configurations
 
     def find_terms(self, docs_ids: List[str]):
-        return self.__elastic_search_connection.mtermvectors(index=config.ELASTICSEARCH_INDEX,
+        return self.__elastic_search_connection.mtermvectors(index=self.__configurations.ELASTICSEARCH_INDEX,
                                                              ids=docs_ids,
                                                              fields=['lyrics'],
                                                              field_statistics=False,
@@ -27,7 +28,7 @@ class ElasticSearchRepository(object):
                                                              payloads=True)
 
     def save(self, lyrics: Lyrics) -> None:
-        if not self.__elastic_search_connection.indices.exists(config.ELASTICSEARCH_INDEX):
+        if not self.__elastic_search_connection.indices.exists(self.__configurations.ELASTICSEARCH_INDEX):
             self.create_index()
 
         lyrics_document = ESLyricsDocument(artist=lyrics.artist,
@@ -44,19 +45,19 @@ class ElasticSearchRepository(object):
             return str(ex)
 
     def create_index(self):
-        index = Index(name=config.ELASTICSEARCH_INDEX)
+        index = Index(name=self.__configurations.ELASTICSEARCH_INDEX)
         index.create()
-        self.__elastic_search_connection.indices.close(index=config.ELASTICSEARCH_INDEX)
+        self.__elastic_search_connection.indices.close(index=self.__configurations.ELASTICSEARCH_INDEX)
         self.__elastic_search_connection.indices.put_settings(body=elastisearch_configurations.SETTINGS,
-                                                              index=config.ELASTICSEARCH_INDEX)
+                                                              index=self.__configurations.ELASTICSEARCH_INDEX)
         self.__elastic_search_connection.indices.put_mapping(doc_type='document',
                                                              body=elastisearch_configurations.MAPPING,
                                                              include_type_name=True,
-                                                             index=config.ELASTICSEARCH_INDEX)
-        self.__elastic_search_connection.indices.open(index=config.ELASTICSEARCH_INDEX)
+                                                             index=self.__configurations.ELASTICSEARCH_INDEX)
+        self.__elastic_search_connection.indices.open(index=self.__configurations.ELASTICSEARCH_INDEX)
 
     def delete_index(self):
-        self.__elastic_search_connection.indices.delete(index=config.ELASTICSEARCH_INDEX)
+        self.__elastic_search_connection.indices.delete(index=self.__configurations.ELASTICSEARCH_INDEX)
 
     def get_by_artist(self, artist: str) -> List[Lyrics]:
         lyrics_list = []
@@ -80,21 +81,21 @@ class ElasticSearchRepository(object):
 
 
 class ESLyricsDocument(Document):
-
     artist = Text()
     lyrics = Text()
     track = Text()
     album = Text()
 
     class Index:
-        name = config.ELASTICSEARCH_INDEX
+        name = full_config.ELASTICSEARCH_INDEX
 
 
 class MongoRepository:
 
-    def __init__(self, mongo_db):
+    def __init__(self, mongo_db, configurations):
         self.__mongo_db = mongo_db
-        self.__collection = self.__mongo_db[config.MONGO_COLLECTION]
+        self.__collection = self.__mongo_db[configurations.MONGO_COLLECTION]
+        self.__configurations = configurations
 
     def get_by_artist(self, artist: str) -> List[Lyrics]:
         lyrics_list = []
@@ -108,7 +109,7 @@ class MongoRepository:
         return lyrics_list
 
     def delete_collection(self) -> None:
-        self.__collection[config.ELASTICSEARCH_INDEX].drop()
+        self.__collection[self.__configurations.ELASTICSEARCH_INDEX].drop()
 
     def save(self, lyrics: Lyrics) -> None:
         self.__collection.insert_one(
@@ -121,21 +122,21 @@ class MongoRepository:
         )
 
 
-def create_repository():
+def create_repository(configurations):
 
-    if config.REPOSITORY == 'mongodb':
-        mongo_client = pymongo.MongoClient(config.MONGO_HOST, int(config.MONGO_PORT))
+    if configurations.REPOSITORY == 'mongodb':
+        mongo_client = pymongo.MongoClient(configurations.MONGO_HOST, int(configurations.MONGO_PORT))
         mongo_lyrics_db = mongo_client['local']
-        return MongoRepository(mongo_lyrics_db)
+        return MongoRepository(mongo_lyrics_db, configurations)
 
-    if config.REPOSITORY == 'elasticsearch':
+    if configurations.REPOSITORY == 'elasticsearch':
         elasticsearch_connection = es_connections.create_connection(
-            hosts=[{'host': config.ELASTICSEARCH_HOST,
-                    'port': int(config.ELASTICSEARCH_PORT),
+            hosts=[{'host': configurations.ELASTICSEARCH_HOST,
+                    'port': int(configurations.ELASTICSEARCH_PORT),
                     'use_ssl': False}],
             verify_certs=False,
             connection_class=elasticsearch.RequestsHttpConnection)
 
-        return ElasticSearchRepository(elasticsearch_connection)
+        return ElasticSearchRepository(elasticsearch_connection, configurations)
 
     raise exceptions.InvalidRepository
