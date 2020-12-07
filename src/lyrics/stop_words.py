@@ -142,5 +142,5 @@ STOP_WORDS = {
     "tua", "tuas", "tudo", "vai", "vais", "vão", "vários", "vem", "vêm", "vens", "vez", "vezes", "viagem", "vindo",
     "vinte", "vocês", "vos", "vós", "vossa", "vossas", "vosso", "vossos", "zero", "[chorus]", "[verse]", "[verse", "-", "[chorus",
     "1]", "[pre-chorus]", "3]", "oh,", "pra", "tá", "vou", "fiz", "chorus", "hey", "2", "1", "", "1", "2",
-    "3", "4", "5", "6", "7", "8", "9", "10", "11", "instrumental", "ive"
+    "3", "4", "5", "6", "7", "8", "9", "10", "11", "instrumental", "ive", "ill", "dont", "gonna", "verse", "yeah"
 }
