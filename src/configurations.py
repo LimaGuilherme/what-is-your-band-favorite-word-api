@@ -116,12 +116,11 @@ class LocalStorageSimpleConfigRepository:
 
 def create_simple_config(spotify_client_id, spotify_client_secret, genius_access_token) -> None:
     config_repository = LocalStorageSimpleConfigRepository()
-    simple_config = SimpleConfig(
+    config_repository.save(SimpleConfig(
         SPOTIFY_CLIENT_ID=spotify_client_id,
         SPOTIFY_CLIENT_SECRET=spotify_client_secret,
         GENIUS_ACCESS_TOKEN=genius_access_token,
-    )
-    config_repository.save(simple_config)
+    ))
 
 
 def get_config(config_type: str) -> Union[SimpleConfig, FullConfig]:
