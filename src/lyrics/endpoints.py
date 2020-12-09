@@ -6,9 +6,9 @@ from flask_restful import Resource
 
 from src.lyrics import exceptions
 from src.lyrics.application_service import APIArtistLyricsService
+from src.web_app import get_api
 
 api = get_api()
-
 
 
 def not_allowed(f):
