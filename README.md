@@ -12,6 +12,29 @@ To use Genius API you will need a token. Create a account https://genius.com/sig
 
 Then acess https://genius.com/api-clients setup your APP infos at "New Api Client". Then go to "ALL Api Clients" and look for "Generate Acess Token".
 
+# Use CLI
+
+Config Credentials - You must provide your credentials only once, you will need your SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET, GENIUS_ACCESS_TOKEN (all required)
+    
+    $ python commands.py config-credentials
+    
+Top Words - You must provide the name of artist or band (required), and the number of top terms you desire (required)
+    
+    $ python commands.py get-top-words
+
+
+Help commands - To see available commands
+    
+    $ python commands.py --help
+    
+Help get-top-words - To see command parameters  
+
+    $ python commands.py get-top-words --help
+
+Help conf-credentials - To see command parameters  
+
+    $ python commands.py config-credentials --help
+    
 # Setting using Docker
 
     $ cp .env.sample .env #change your variables
@@ -27,7 +50,7 @@ Then acess https://genius.com/api-clients setup your APP infos at "New Api Clien
     $ docker exec -it wiybfw-api bash
     $ python -m unittest
 
-# Usage
+# Use API
 
 # METHOD POST
 Use to save all lyrics in your choosen repository:
@@ -39,8 +62,32 @@ Use to get term frequency lyrics in your choosen repository:
 
     $ curl -X GET "http://0.0.0.0:6669/api/artists/Queen/lyrics" 
 
-# Authors
-Guilherme Lima - Initial work
+
+# AUTHORS 
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/LimaGuilherme">
+        <img src="https://avatars1.githubusercontent.com/u/13668673?s=460&u=6db061321b83a015314e8ab53b1a0bead7919310&v=4" width="100px;" alt=""/>
+        <br />
+        <sub>
+          <b>Guilerme Lima</b>
+          <span> - Lead Development</span>
+        </sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/antunesleo">
+        <img src="https://avatars0.githubusercontent.com/u/13929952?s=400&u=8c46ff05e5295aa7f085f5ec8aeddf5af6bc4677&v=4" width="100px;" alt=""/>
+        <br />
+        <sub>
+          <b>Leonardo Antunes</b>
+          <span> - Architure Adviser </span>
+        </sub>
+      </a>
+    </td>
+  </tr>
+</table>  
 
 # License
 This project is licensed under the MIT License - see the LICENSE.md file for details
