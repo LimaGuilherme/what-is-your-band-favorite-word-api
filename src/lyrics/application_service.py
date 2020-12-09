@@ -1,4 +1,4 @@
-from src import exceptions
+from src.lyrics import exceptions
 from src.lyrics.statitics import StatisticCount
 
 

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src import exceptions
+from src.lyrics import exceptions
 from src.lyrics.searchers import AlbumsSearcher
 from src.lyrics.searchers import ArtistSearcher
 from src.lyrics.searchers import LyricsSearcher

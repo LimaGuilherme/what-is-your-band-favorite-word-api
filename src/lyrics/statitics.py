@@ -3,7 +3,7 @@ import re
 from abc import ABC, abstractmethod
 from typing import List
 
-from src import exceptions
+from src.lyrics import exceptions
 from src.lyrics.entity import Lyrics
 from src.lyrics.repositories import MongoRepository, ElasticSearchRepository
 from src.lyrics.stop_words import STOP_WORDS

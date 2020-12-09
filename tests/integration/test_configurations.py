@@ -2,7 +2,7 @@ import os
 from unittest import TestCase, mock
 
 from src.configurations import LocalStorageSimpleConfigRepository, EnvFullConfigRepository, SimpleConfig, get_config, FullConfig, create_simple_config
-from src.exceptions import ConfigError
+from src.lyrics.exceptions import ConfigError
 
 
 class TestEnvFullConfigRepository(TestCase):

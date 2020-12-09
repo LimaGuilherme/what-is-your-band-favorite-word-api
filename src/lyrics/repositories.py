@@ -5,7 +5,7 @@ from elasticsearch_dsl.connections import connections as es_connections
 from elasticsearch_dsl import Document, Text, Index
 from typing import List
 
-from src import exceptions, elastisearch_configurations
+from src.lyrics import exceptions, elastisearch_configurations
 from src.lyrics.entity import Lyrics
 
 from src import configurations as config_module

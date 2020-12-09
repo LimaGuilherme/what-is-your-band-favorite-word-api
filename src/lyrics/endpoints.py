@@ -4,9 +4,11 @@ from functools import wraps
 from flask import Response
 from flask_restful import Resource
 
-from src import configurations as config_module, exceptions
+from src.lyrics import exceptions
+from src.lyrics.application_service import APIArtistLyricsService
 
-config = config_module.get_config()
+api = get_api()
+
 
 
 def not_allowed(f):
@@ -91,3 +93,9 @@ class ArtistResource(ResourceBase):
     @not_allowed
     def put(self):
         pass
+
+
+def register(artist_service: APIArtistLyricsService):
+    api.add_resource(ArtistResource,
+                     '/api/artists/<string:artist>/lyrics',
+                     resource_class_kwargs={'artist_service': artist_service})

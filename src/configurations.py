@@ -6,7 +6,7 @@ from abc import ABC
 
 from typing import Tuple, Union
 
-from src.exceptions import ConfigError
+from src.lyrics.exceptions import ConfigError
 
 __all__ = [
     'create_simple_config',
