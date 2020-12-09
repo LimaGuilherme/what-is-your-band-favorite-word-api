@@ -7,15 +7,16 @@ from src.web_app import get_api
 api = get_api()
 
 
-class ArtistResource(ResourceBase):
+class WordsResource(ResourceBase):
 
-    def __init__(self, artist_service):
-        super(ArtistResource, self).__init__()
-        self.artist_service = artist_service
+    def __init__(self, storage_word_service, index_service):
+        super(WordsResource, self).__init__()
+        self.storage_word_service = storage_word_service
+        self.index_service = index_service
 
     def get(self, artist):
         try:
-            words_frequency = self.artist_service.count_frequency(artist)
+            words_frequency = self.storage_word_service.count_frequency(artist)
             return self.response(words_frequency)
         except exceptions.ElasticSearchConnectionError:
             return self.return_elastic_search_connection_error()
@@ -26,7 +27,7 @@ class ArtistResource(ResourceBase):
 
     def post(self, artist):
         try:
-            self.artist_service.index(artist)
+            self.index_service.index(artist)
             return self.return_ok()
         except exceptions.LyricsNotFound:
             return self.return_no_lyrics_were_found()
@@ -40,7 +41,10 @@ class ArtistResource(ResourceBase):
         return self.return_method_not_allowed()
 
 
-def register(artist_service) -> None:
-    api.add_resource(ArtistResource,
+def register(storage_word_service, index_service) -> None:
+    api.add_resource(WordsResource,
                      '/api/artists/<string:artist>/lyrics',
-                     resource_class_kwargs={'artist_service': artist_service})
+                     resource_class_kwargs={
+                         'storage_word_service': storage_word_service,
+                         'index_service': index_service,
+                     })
