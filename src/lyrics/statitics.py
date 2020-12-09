@@ -12,7 +12,7 @@ from src.lyrics.stop_words import STOP_WORDS
 class StatisticCount(ABC):
 
     @abstractmethod
-    def count_words_frequency(self, lyrics_list: List[Lyrics]) -> dict:
+    def count_words_frequency(self, lyrics_list: List[Lyrics], number_of_terms: int) -> dict:
         pass
 
 
@@ -22,7 +22,7 @@ class ESStaticsCount(StatisticCount):
         super(ESStaticsCount, self).__init__()
         self.__elastic_search_repository = elastic_search_repository
 
-    def count_words_frequency(self, lyrics_list: List[Lyrics]) -> dict:
+    def count_words_frequency(self, lyrics_list: List[Lyrics], number_of_terms: int) -> dict:
         docs_ids = [str(lyrics.id) for lyrics in lyrics_list]
         result = {}
 

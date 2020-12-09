@@ -1,8 +1,17 @@
+from abc import ABC, abstractmethod
+
 from src.lyrics import exceptions
 from src.lyrics.statitics import StatisticCount
 
 
-class APIArtistLyricsService:
+class WordsService(ABC):
+
+    @abstractmethod
+    def count_frequency(self, artist: str, number_of_terms: int) -> dict:
+        pass
+
+
+class StorageWordsService(WordsService):
 
     def __init__(self, lyrics_searcher,
                  statistic: StatisticCount,
@@ -13,7 +22,7 @@ class APIArtistLyricsService:
         self.lyrics_repository = repository
         self.artist_searcher = artist_searcher
 
-    def count_frequency(self, artist: str) -> dict:
+    def count_frequency(self, artist: str, number_of_terms: int) -> dict:
         if not self.artist_searcher.is_this_artist_valid(artist):
             raise exceptions.ArtistNotFound
 
@@ -22,7 +31,38 @@ class APIArtistLyricsService:
         if not lyrics_list:
             raise exceptions.LyricsNotFound
 
-        return self.statistic.count_words_frequency(lyrics_list)
+        return self.statistic.count_words_frequency(lyrics_list, number_of_terms)
+
+
+class RunTimeWordsService(WordsService):
+
+    def __init__(self, lyrics_searcher,
+                 statistic: StatisticCount,
+                 artist_searcher):
+        self.lyrics_searcher = lyrics_searcher
+        self.statistic = statistic
+        self.artist_searcher = artist_searcher
+
+    def count_frequency(self, artist: str, number_of_terms: int) -> dict:
+        if not self.artist_searcher.is_this_artist_valid(artist):
+            raise exceptions.ArtistNotFound
+
+        lyrics_list = self.lyrics_searcher.get_lyrics(artist)
+
+        if not lyrics_list:
+            raise exceptions.LyricsNotFound
+
+        return self.statistic.count_words_frequency(lyrics_list, number_of_terms)
+
+
+class IndexService:
+
+    def __init__(self, lyrics_searcher,
+                 repository,
+                 artist_searcher):
+        self.lyrics_searcher = lyrics_searcher
+        self.lyrics_repository = repository
+        self.artist_searcher = artist_searcher
 
     def index(self, artist: str) -> None:
         if not self.artist_searcher.is_this_artist_valid(artist):
@@ -35,24 +75,3 @@ class APIArtistLyricsService:
 
         for lyrics in lyrics_list:
             self.lyrics_repository.save(lyrics)
-
-
-class CLIArtistLyricsService:
-
-    def __init__(self, lyrics_searcher,
-                 statistic: StatisticCount,
-                 artist_searcher):
-        self.lyrics_searcher = lyrics_searcher
-        self.statistic = statistic
-        self.artist_searcher = artist_searcher
-
-    def count_frequency(self, artist: str, number_of_terms) -> dict:
-        if not self.artist_searcher.is_this_artist_valid(artist):
-            raise exceptions.ArtistNotFound
-
-        lyrics_list = self.lyrics_searcher.get_lyrics(artist)
-
-        if not lyrics_list:
-            raise exceptions.LyricsNotFound
-
-        return self.statistic.count_words_frequency(lyrics_list, number_of_terms)

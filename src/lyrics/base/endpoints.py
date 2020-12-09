@@ -1,6 +1,6 @@
 from flask_restful import Resource
 
-from src.base.serializer import CaseStyleConverter
+from src.lyrics.base.serializer import CaseStyleConverter
 
 
 class ResourceBase(Resource):
@@ -32,3 +32,6 @@ class ResourceBase(Resource):
 
     def return_bad_parameters(self, message=None):
         return {'result': 'error', 'error': 'Bad Parameters', 'exception': str(message)}, 500
+
+    def return_method_not_allowed(self):
+        return {'result': 'error', 'error': 'Method Not Allowed'}, 405

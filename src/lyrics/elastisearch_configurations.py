@@ -6,7 +6,7 @@ MAPPING = {
             "store": True,
             "analyzer": "custom_analyzer"
         },
-        "artits": {
+        "artist": {
             "type": "text",
             "term_vector": "with_positions_offsets_payloads",
             "analyzer": "custom_analyzer"

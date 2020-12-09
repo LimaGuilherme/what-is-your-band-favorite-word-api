@@ -1,7 +1,7 @@
 import click
 
 from src import configurations as config_module
-from src.lyrics.application_service import CLIArtistLyricsService
+from src.lyrics.application_service import RunTimeWordsService
 from src.lyrics.searchers import AlbumsSearcher, TrackSearcher, LyricsSearcher, ArtistSearcher
 from src.lyrics.statitics import create_statistic
 
@@ -34,6 +34,6 @@ def get_lyrics(artist, terms_quantity):
     artist_searcher = ArtistSearcher(configurations)
     statistic = create_statistic()
 
-    artist_service = CLIArtistLyricsService(lyrics_searcher, statistic, artist_searcher)
-    words_frequency = artist_service.count_frequency(artist, int(terms_quantity))
+    runtime_word_service = RunTimeWordsService(lyrics_searcher, statistic, artist_searcher)
+    words_frequency = runtime_word_service.count_frequency(artist, int(terms_quantity))
     click.echo(words_frequency)

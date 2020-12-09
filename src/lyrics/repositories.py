@@ -10,7 +10,7 @@ from src.lyrics.entity import Lyrics
 
 from src import configurations as config_module
 
-full_config = config_module.get_config('full')
+# full_config = config_module.get_config('full')
 
 
 class ElasticSearchRepository(object):
@@ -87,7 +87,8 @@ class ESLyricsDocument(Document):
     album = Text()
 
     class Index:
-        name = full_config.ELASTICSEARCH_INDEX
+        name = 'lyrics'
+        # name = full_config.ELASTICSEARCH_INDEX
 
 
 class MongoRepository:
