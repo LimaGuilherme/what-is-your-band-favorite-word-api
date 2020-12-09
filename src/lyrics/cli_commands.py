@@ -25,10 +25,10 @@ def config_credentials(spotify_client_id, spotify_client_secret, genius_access_t
 
 
 @main.command()
-@click.option('--artist', prompt='Search lyrics for this band', help='Artist or Band Name', required=True)
-@click.option('--terms-quantity', prompt='The number of words you desire', required=True,
+@click.option('--artist', prompt='Artist or Band', help='Artist or Band Name', required=True)
+@click.option('--terms-quantity', prompt='N top words', required=True,
               help='The number of words you desire', type=int)
-def get_lyrics(artist, terms_quantity):
+def get_top_words(artist, terms_quantity):
 
     configurations = config_module.get_config(config_type='simple')
 
@@ -43,7 +43,7 @@ def get_lyrics(artist, terms_quantity):
 
     try:
         words_frequency = runtime_word_service.count_frequency(artist, int(terms_quantity))
-        click.secho(words_frequency, fg='blue')
+        click.echo(words_frequency)
     except exceptions.ArtistNotFound:
         click.secho(f'No artist were found with this name: {artist}', fg='red')
     except exceptions.LyricsNotFound:

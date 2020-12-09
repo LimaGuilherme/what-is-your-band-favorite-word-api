@@ -1,5 +1,6 @@
 import re
 
+from itertools import islice
 from abc import ABC, abstractmethod
 from typing import List
 
@@ -18,7 +19,7 @@ class StatisticCount(ABC):
 
 class ESStaticsCount(StatisticCount):
 
-    def __init__(self, elastic_search_repository):
+    def __init__(self, elastic_search_repository: ElasticSearchRepository):
         super(ESStaticsCount, self).__init__()
         self.__elastic_search_repository = elastic_search_repository
 
@@ -39,6 +40,10 @@ class ESStaticsCount(StatisticCount):
                     continue
 
                 result[term] = frequency['term_freq']
+
+        if number_of_terms:
+            return dict(islice(result.items(), number_of_terms))
+
         return dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
 
 
@@ -62,8 +67,6 @@ class CommonStatistical(StatisticCount):
                 result[word] = 1
 
         result = dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
-
-        from itertools import islice
 
         if number_of_terms:
             return dict(islice(result.items(), number_of_terms))
