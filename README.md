@@ -63,7 +63,7 @@ Use to get term frequency lyrics in your choosen repository:
     $ curl -X GET "http://0.0.0.0:6669/api/artists/Queen/lyrics" 
 
 
-# AUTHORS 
+# Authors 
 <table>
   <tr>
     <td align="center">
