@@ -82,7 +82,7 @@ Use to get term frequency lyrics in your choosen repository:
         <br />
         <sub>
           <b>Leonardo Antunes</b>
-          <span> - Architure Adviser </span>
+          <span> - Architecture Adviser </span>
         </sub>
       </a>
     </td>
