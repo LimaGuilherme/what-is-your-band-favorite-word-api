@@ -18,20 +18,23 @@ class ResourceBase(Resource):
             result.update(extra)
         return result
 
-    def return_deleted(self):
-        return {'result': 'OK'}, 204
+    def return_elastic_search_connection_error(self):
+        return {'result': 'error', 'exception': "Maybe your elastic search isn't working"}, 502
 
-    def return_not_found(self, message=None):
-        return {'result': 'error', 'error': 'Not Found', 'message': str(message)}, 404
+    def return_no_lyrics_were_found(self):
+        return {'result': 'error', 'exception': 'Sadly no lyrics were found'}, 404
 
-    def return_unexpected_error(self, message=None):
-        return {'result': 'error', 'error': 'General Error', 'exception': str(message)}, 500
+    def return_no_artist_found(self):
+        return {'result': 'error', 'exception': 'This artist seems invalid, perhaps you misspelled'}, 404
 
-    def return_bad_request(self, message=None):
-        return {'result': 'error', 'error': 'Bad Request', 'exception': str(message)}, 400
+    def return_unexpected_error(self, exception=None):
+        return {'result': 'error', 'error': 'General Error', 'exception': str(exception)}, 500
 
-    def return_bad_parameters(self, message=None):
-        return {'result': 'error', 'error': 'Bad Parameters', 'exception': str(message)}, 500
+    def return_artist_not_send(self, exception=None):
+        return {'result': 'error', 'error': 'Artist Not Received', 'exception': str(exception)}, 400
+
+    def return_invalid_repository(self):
+        return {'result': 'error', 'error': 'Invalid Repository, You should use elasticsearch or mongodb'}, 405
 
     def return_method_not_allowed(self):
         return {'result': 'error', 'error': 'Method Not Allowed'}, 405

@@ -15,9 +15,6 @@ __all__ = [
     'FullConfig'
 ]
 
-full_config = None
-simple_config = None
-
 
 @dataclass
 class Config(ABC):
@@ -123,22 +120,14 @@ def create_simple_config(spotify_client_id, spotify_client_secret, genius_access
     ))
 
 
-def get_config(config_type: str) -> Union[SimpleConfig, FullConfig]:
-    global full_config
-    global simple_config
+def get_config(config_type: str, use_cache=True) -> Union[SimpleConfig, FullConfig]:
 
     if config_type == 'simple':
-        if simple_config:
-            return simple_config
-
         repository = LocalStorageSimpleConfigRepository()
         simple_config = repository.get()
         return simple_config
 
     if config_type == 'full':
-        if full_config:
-            return full_config
-
         repository = EnvFullConfigRepository()
         full_config = repository.get()
         return full_config

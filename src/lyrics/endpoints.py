@@ -16,8 +16,8 @@ class WordsResource(ResourceBase):
 
     def get(self, artist):
         try:
-            words_frequency = self.storage_word_service.count_frequency(artist)
-            return self.response(words_frequency)
+            words_frequency = self.storage_word_service.count_frequency(artist, 10)
+            return words_frequency, 200
         except exceptions.ElasticSearchConnectionError:
             return self.return_elastic_search_connection_error()
         except exceptions.ArtistNotFound:
@@ -28,16 +28,16 @@ class WordsResource(ResourceBase):
     def post(self, artist):
         try:
             self.index_service.index(artist)
-            return self.return_ok()
+            return self.return_ok(), 200
         except exceptions.LyricsNotFound:
             return self.return_no_lyrics_were_found()
         except exceptions.ArtistNotFound:
             return self.return_no_artist_found()
 
-    def delete(self):
+    def delete(self, artist):
         return self.return_method_not_allowed()
 
-    def put(self):
+    def put(self, artist):
         return self.return_method_not_allowed()
 
 

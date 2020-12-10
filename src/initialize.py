@@ -24,7 +24,7 @@ repository = create_repository(configurations)
 statistic = create_statistic(repository)
 
 storage_word_service = StorageWordsService(lyrics_searcher, statistic, repository, artist_searcher)
-index_service = IndexService(lyrics_searcher, statistic, artist_searcher)
+index_service = IndexService(lyrics_searcher, repository, artist_searcher)
 
 endpoints.register(
     storage_word_service=storage_word_service,
