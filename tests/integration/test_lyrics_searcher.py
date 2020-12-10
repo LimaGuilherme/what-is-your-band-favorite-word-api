@@ -11,7 +11,7 @@ from src import configurations as config_module
 class TestLyricsSearcher(TestCase):
 
     def setUp(self) -> None:
-        self.config = config_module.get_config()
+        self.config = config_module.get_config(config_type='full')
 
     def test_should_return_a_empty_list_of_lyrics_when_given_a_invalid_artist(self):
         track_searcher = TrackSearcher(self.config)

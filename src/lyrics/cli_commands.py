@@ -26,9 +26,9 @@ def config_credentials(spotify_client_id, spotify_client_secret, genius_access_t
 
 @main.command()
 @click.option('--artist', prompt='Artist or Band', help='Artist or Band Name', required=True)
-@click.option('--terms-quantity', prompt='N top words', required=True,
+@click.option('--n-top-words', prompt='N top words', required=True,
               help='The number of words you desire', type=int)
-def get_top_words(artist, terms_quantity):
+def get_top_words(artist, n_top_words):
 
     configurations = config_module.get_config(config_type='simple')
 
@@ -42,7 +42,7 @@ def get_top_words(artist, terms_quantity):
     click.secho('Starting operation, this may take a while. Get some coffee.', fg='green')
 
     try:
-        words_frequency = runtime_word_service.count_frequency(artist, int(terms_quantity))
+        words_frequency = runtime_word_service.count_frequency(artist, int(n_top_words))
         click.echo(words_frequency)
     except exceptions.ArtistNotFound:
         click.secho(f'No artist were found with this name: {artist}', fg='red')

@@ -3,12 +3,15 @@ from unittest import TestCase
 from src import initialize
 from src.lyrics.repositories import create_repository, MongoRepository, ElasticSearchRepository
 
+from src import configurations as config_module
+
 
 class TestApi(TestCase):
 
     def setUp(self) -> None:
         self.app = initialize.web_app.test_client()
-        self.repository = create_repository()
+        self.config = config_module.get_config(config_type='full')
+        self.repository = create_repository(self.config)
 
     def tearDown(self) -> None:
         if isinstance(self.repository, MongoRepository):

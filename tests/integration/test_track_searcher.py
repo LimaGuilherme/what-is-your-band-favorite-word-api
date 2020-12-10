@@ -8,7 +8,7 @@ from src import configurations as config_module
 class TestTrackSearcher(TestCase):
 
     def setUp(self) -> None:
-        self.config = config_module.get_config()
+        self.config = config_module.get_config(config_type='full')
 
     def test_should_return_tracks_from_given_album(self):
         track_searcher = TrackSearcher(self.config)

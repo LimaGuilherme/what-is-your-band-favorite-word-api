@@ -8,7 +8,7 @@ from src import configurations as config_module
 class TestAlbumsSearcher(TestCase):
 
     def setUp(self) -> None:
-        self.config = config_module.get_config()
+        self.config = config_module.get_config(config_type='full')
 
     def test_should_bring_all_albums_from_given_artist(self):
 

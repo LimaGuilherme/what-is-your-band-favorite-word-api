@@ -9,8 +9,18 @@ from src.lyrics import exceptions, elastisearch_configurations
 from src.lyrics.entity import Lyrics
 
 from src import configurations as config_module
+from src.lyrics.exceptions import ConfigError
 
-# full_config = config_module.get_config('full')
+'''
+This is so because there is a coupling between the statistics module 
+and the repository in the case of the CLI
+'''
+try:
+    full_config = config_module.get_config('full')
+    elasticsearch_index = full_config.ELASTICSEARCH_INDEX
+except ConfigError:
+    elasticsearch_index = 'lyrics'
+    pass
 
 
 class ElasticSearchRepository(object):
@@ -87,8 +97,7 @@ class ESLyricsDocument(Document):
     album = Text()
 
     class Index:
-        name = 'lyrics'
-        # name = full_config.ELASTICSEARCH_INDEX
+        name = elasticsearch_index
 
 
 class MongoRepository:

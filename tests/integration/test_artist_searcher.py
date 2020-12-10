@@ -7,7 +7,7 @@ from src import configurations as config_module
 class TestArtistSearcher(TestCase):
 
     def setUp(self) -> None:
-        self.config = config_module.get_config()
+        self.config = config_module.get_config(config_type='full')
 
     def test_should_return_false_for_nonexistent_artist(self):
         artist_searcher = ArtistSearcher(self.config)
