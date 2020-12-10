@@ -119,7 +119,7 @@ class MongoRepository:
         return lyrics_list
 
     def delete_collection(self) -> None:
-        self.__collection[self.__configurations.ELASTICSEARCH_INDEX].drop()
+        self.__collection.drop()
 
     def save(self, lyrics: Lyrics) -> None:
         self.__collection.insert_one(
