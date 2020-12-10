@@ -26,7 +26,7 @@ MAPPING = {
 
 SETTINGS = {
     "index": {
-        "refresh_interval": -1
+        "refresh_interval": "1s"
     },
     "analysis": {
         "analyzer": {

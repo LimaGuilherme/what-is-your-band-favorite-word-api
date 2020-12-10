@@ -1,3 +1,5 @@
+from time import sleep
+
 import elasticsearch
 import pymongo
 
@@ -82,6 +84,7 @@ class ElasticSearchRepository(object):
         return lyrics_list
 
     def __query_documents(self, artist):
+        sleep(2)
         try:
             searcher = ESLyricsDocument.search().query("match", artist=artist).params(size=1000, timeout='150s')
             documents = searcher.execute()
