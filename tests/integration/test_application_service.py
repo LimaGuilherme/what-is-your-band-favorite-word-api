@@ -7,7 +7,7 @@ from src.lyrics.searchers import LyricsSearcher
 from src.lyrics.searchers import TrackSearcher
 
 from src.lyrics.statitics import create_statistic
-from src.lyrics.application_service import IndexService, RunTimeWordsService, StorageWordsService
+from src.lyrics.application_service import IndexService, RunTimeTopWordsService, StorageTopWordsService
 from src.lyrics.repositories import create_repository, MongoRepository, ElasticSearchRepository
 
 from src import configurations as config_module
@@ -38,7 +38,7 @@ class TestIndexService(TestCase):
             self.index_service.index('Semper Soma')
 
 
-class TestStorageWordsService(TestCase):
+class TestStorageTopWordsService(TestCase):
 
     def setUp(self) -> None:
         self.config = config_module.get_config(config_type='full')
@@ -50,7 +50,7 @@ class TestStorageWordsService(TestCase):
 
         lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher, self.config)
 
-        self.storage_words_service = StorageWordsService(lyrics_searcher, statistic, self.repository, artist_searcher)
+        self.storage_words_service = StorageTopWordsService(lyrics_searcher, statistic, self.repository, artist_searcher)
         self.index_service = IndexService(lyrics_searcher, self.repository, artist_searcher)
 
     def test__should_raise_artist_not_found(self):
@@ -75,7 +75,7 @@ class TestStorageWordsService(TestCase):
             self.storage_words_service.count_frequency('Semper Soma', 10)
 
 
-class TestRunTimeWordsService(TestCase):
+class TestRunTimeTopWordsService(TestCase):
 
     def setUp(self) -> None:
         self.config = config_module.get_config(config_type='full')
@@ -87,7 +87,7 @@ class TestRunTimeWordsService(TestCase):
 
         lyrics_searcher = LyricsSearcher(albums_searcher, track_searcher, self.config)
 
-        self.runtime_words_service = RunTimeWordsService(lyrics_searcher, statistic, artist_searcher)
+        self.runtime_words_service = RunTimeTopWordsService(lyrics_searcher, statistic, artist_searcher)
         self.index_service = IndexService(lyrics_searcher, self.repository, artist_searcher)
 
     def test__should_raise_artist_not_found(self):

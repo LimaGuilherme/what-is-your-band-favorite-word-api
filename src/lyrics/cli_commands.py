@@ -2,7 +2,7 @@ import click
 
 from src import configurations as config_module
 from src.lyrics import exceptions
-from src.lyrics.application_service import RunTimeWordsService
+from src.lyrics.application_service import RunTimeTopWordsService
 from src.lyrics.searchers import AlbumsSearcher, TrackSearcher, LyricsSearcher, ArtistSearcher
 from src.lyrics.statitics import create_statistic
 
@@ -38,7 +38,7 @@ def get_top_words(artist, n_top_words):
     artist_searcher = ArtistSearcher(configurations)
     statistic = create_statistic()
 
-    runtime_word_service = RunTimeWordsService(lyrics_searcher, statistic, artist_searcher)
+    runtime_word_service = RunTimeTopWordsService(lyrics_searcher, statistic, artist_searcher)
     click.secho('Starting operation, this may take a while. Get some coffee.', fg='green')
 
     try:

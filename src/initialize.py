@@ -2,7 +2,7 @@ from src import configurations as config_module
 from src import web_app as web_app_module
 
 from src.lyrics import endpoints
-from src.lyrics.application_service import StorageWordsService, IndexService
+from src.lyrics.application_service import StorageTopWordsService, IndexService
 from src.lyrics.searchers import AlbumsSearcher
 from src.lyrics.searchers import ArtistSearcher
 from src.lyrics.searchers import LyricsSearcher
@@ -23,7 +23,7 @@ artist_searcher = ArtistSearcher(configurations)
 repository = create_repository(configurations)
 statistic = create_statistic(repository)
 
-storage_word_service = StorageWordsService(lyrics_searcher, statistic, repository, artist_searcher)
+storage_word_service = StorageTopWordsService(lyrics_searcher, statistic, repository, artist_searcher)
 index_service = IndexService(lyrics_searcher, repository, artist_searcher)
 
 endpoints.register(

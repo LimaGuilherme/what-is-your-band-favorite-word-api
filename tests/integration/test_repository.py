@@ -2,14 +2,7 @@ from unittest import TestCase
 
 from src.lyrics import exceptions
 from src.lyrics.entity import Lyrics
-from src.lyrics.searchers import AlbumsSearcher
-from src.lyrics.searchers import ArtistSearcher
-from src.lyrics.searchers import LyricsSearcher
-from src.lyrics.searchers import TrackSearcher
-
-from src.lyrics.statitics import create_statistic
-from src.lyrics.application_service import IndexService, RunTimeWordsService, StorageWordsService
-from src.lyrics.repositories import create_repository, MongoRepository, ElasticSearchRepository
+from src.lyrics.repositories import create_repository
 
 from src import configurations as config_module
 
