@@ -58,9 +58,13 @@ Use to save all lyrics in your choosen repository:
     $ curl -X POST "http://0.0.0.0:6669/api/artists/Queen/lyrics" 
 
 # METHOD GET
-Use to get term frequency lyrics in your choosen repository:
+Use to get top words from a band in your choosen repository:
 
-    $ curl -X GET "http://0.0.0.0:6669/api/artists/Queen/lyrics" 
+    $ curl -X GET "http://0.0.0.0:6669/api/artists/Queen/top-words?size=10"
+    
+Note: if your band has space in name, replace for %20 for example:
+    
+    $ curl -X GET "http://0.0.0.0:6669/api/artists/Bring%20The%20Me%20Horizon/top-words?size=10"
 
 
 # Authors 
