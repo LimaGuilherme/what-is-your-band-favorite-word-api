@@ -41,15 +41,13 @@ class ESStaticsCount(StatisticCount):
 
                 result[term] = frequency['term_freq']
 
-        if number_of_terms:
-            return dict(islice(result.items(), number_of_terms))
-
-        return dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
+        result = dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
+        return dict(islice(result.items(), number_of_terms))
 
 
 class CommonStatistical(StatisticCount):
 
-    def count_words_frequency(self, lyrics_list: List[Lyrics], number_of_terms: int = None) -> dict:
+    def count_words_frequency(self, lyrics_list: List[Lyrics], number_of_terms: int) -> dict:
         result = {}
         for lyrics in lyrics_list:
 
@@ -68,9 +66,7 @@ class CommonStatistical(StatisticCount):
 
         result = dict(sorted(result.items(), key=lambda item: item[1], reverse=True))
 
-        if number_of_terms:
-            return dict(islice(result.items(), number_of_terms))
-        return result
+        return dict(islice(result.items(), number_of_terms))
 
 
 def create_statistic(repository=None) -> StatisticCount:

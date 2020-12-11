@@ -47,14 +47,7 @@ class ElasticSearchRepository(object):
                                            lyrics=lyrics.lyrics,
                                            track=lyrics.track,
                                            album=lyrics.album)
-        try:
-            lyrics_document.save()
-        except elasticsearch.TransportError as ex:
-            print('transport', ex)
-            return str(ex)
-        except Exception as ex:
-            print('ex generica', ex)
-            return str(ex)
+        lyrics_document.save()
 
     def create_index(self):
         index = Index(name=self.__configurations.ELASTICSEARCH_INDEX)

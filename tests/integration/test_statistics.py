@@ -34,13 +34,24 @@ class TestESStatistical(TestCase):
         self.statistical = create_statistic(self.elasticsearch_repository)
 
     def tearDown(self) -> None:
-        self.elasticsearch_repository.delete_index()
+        try:
+            self.elasticsearch_repository.delete_index()
+        except:
+            pass
 
     def test_should_count_words_frequency(self):
-        self.elasticsearch_repository.save(Lyrics(artist='Mc Rodolfinho',
-                                                  lyrics='a me deus',
-                                                  album='vida loca',
-                                                  track='como e bom ser vida loca'))
+        lyrics_list = [Lyrics(artist='Mc Rodolfinho',
+                              lyrics='a me deus',
+                              album='vida loca',
+                              track='como e bom ser vida loca'),
+                       Lyrics(artist='Mc Rodolfinho',
+                              lyrics='a me deus',
+                              album='vida loca',
+                              track='como e bom ser vida loca')]
+
+        for lyrics in lyrics_list:
+            self.elasticsearch_repository.save(lyrics)
+
         lyrics = self.elasticsearch_repository.get_by_artist('Mc Rodolfinho')
         words_frequency = self.statistical.count_words_frequency(lyrics, 10)
         self.assertIsInstance(words_frequency, dict)
