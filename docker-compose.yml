@@ -92,39 +92,39 @@ services:
       - wiybfw-network
     ports:
       - 8081:8081
-
-  wiybfw-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: wiybfw-api
-    volumes:
-    - ./:/code
-    restart: unless-stopped
-    environment:
-      PORT: ${APP_SETTINGS}
-      APP_SETTINGS: ${APP_SETTINGS}
-      ELASTICSEARCH_HOST: ${ELASTICSEARCH_HOST}
-      ELASTICSEARCH_PORT: ${ELASTICSEARCH_PORT}
-      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
-      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
-      GENIUS_ACCESS_TOKEN: ${GENIUS_ACCESS_TOKEN}
-      MONGO_HOST: ${MONGO_HOST}
-      MONGO_PORT: ${MONGO_PORT}
-      REPOSITORY: ${REPOSITORY}
-      ELASTICSEARCH_INDEX: ${ELASTICSEARCH_INDEX}
-      MONGO_COLLECTION: ${MONGO_COLLECTION}
-
-    ports:
-      - "6669:6669"
-    networks:
-      - wiybfw-network
-    depends_on:
-      - es01
-      - es02
-      - es03
-      - kib01
-      - mongo
+#
+#  wiybfw-api:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: wiybfw-api
+#    volumes:
+#    - ./:/code
+#    restart: unless-stopped
+#    environment:
+#      PORT: ${APP_SETTINGS}
+#      APP_SETTINGS: ${APP_SETTINGS}
+#      ELASTICSEARCH_HOST: ${ELASTICSEARCH_HOST}
+#      ELASTICSEARCH_PORT: ${ELASTICSEARCH_PORT}
+#      SPOTIFY_CLIENT_ID: ${SPOTIFY_CLIENT_ID}
+#      SPOTIFY_CLIENT_SECRET: ${SPOTIFY_CLIENT_SECRET}
+#      GENIUS_ACCESS_TOKEN: ${GENIUS_ACCESS_TOKEN}
+#      MONGO_HOST: ${MONGO_HOST}
+#      MONGO_PORT: ${MONGO_PORT}
+#      REPOSITORY: ${REPOSITORY}
+#      ELASTICSEARCH_INDEX: ${ELASTICSEARCH_INDEX}
+#      MONGO_COLLECTION: ${MONGO_COLLECTION}
+#
+#    ports:
+#      - "6669:6669"
+#    networks:
+#      - wiybfw-network
+#    depends_on:
+#      - es01
+#      - es02
+#      - es03
+#      - kib01
+#      - mongo
 
 volumes:
   data01:

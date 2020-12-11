@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+from src.lyrics import exceptions
 from src.lyrics.entity import Lyrics
 from src.lyrics.repositories import create_repository
 from src import configurations as config_module
@@ -44,3 +45,7 @@ class TestESStatistical(TestCase):
         words_frequency = self.statistical.count_words_frequency(lyrics, 10)
         self.assertIsInstance(words_frequency, dict)
         self.assertEqual(len(words_frequency), 1)
+
+    def test_should_raise_invalid_repository(self):
+        with self.assertRaises(exceptions.InvalidRepository):
+            self.statistical = create_statistic('invalid-repository')

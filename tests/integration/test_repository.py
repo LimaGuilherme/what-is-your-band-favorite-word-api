@@ -60,3 +60,11 @@ class TestMongoRepository(TestCase):
         self.assertTrue(len(lyrics_list[0].words), 3)
 
 
+class TestCreateConfig(TestCase):
+    def setUp(self) -> None:
+        self.config = config_module.get_config(config_type='full')
+
+    def test_should_raise_invalid_repository(self):
+        self.config.REPOSITORY = 'invalid-repository'
+        with self.assertRaises(exceptions.InvalidRepository):
+            self.statistical = create_repository(self.config)
