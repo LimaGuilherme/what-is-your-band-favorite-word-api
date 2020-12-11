@@ -23,6 +23,15 @@ class LyricsResource(ResourceBase):
         except exceptions.ArtistNotFound:
             return self.return_no_artist_found()
 
+    def get(self, artist):
+        return self.return_method_not_allowed()
+
+    def delete(self, artist):
+        return self.return_method_not_allowed()
+
+    def put(self, artist):
+        return self.return_method_not_allowed()
+
 
 class TopWordsResource(ResourceBase):
 
@@ -44,7 +53,7 @@ class TopWordsResource(ResourceBase):
         except exceptions.LyricsNotFound:
             return self.return_no_lyrics_were_found()
 
-    def post(self):
+    def post(self, artist):
         return self.return_method_not_allowed()
 
     def delete(self, artist):
