@@ -14,7 +14,7 @@ from src import configurations as config_module
 from src.lyrics.exceptions import ConfigError
 
 '''
-This is so because there is a coupling between the statistics module 
+This is so because there is a coupling between the statistics module
 and the repository in the case of the CLI
 '''
 try:

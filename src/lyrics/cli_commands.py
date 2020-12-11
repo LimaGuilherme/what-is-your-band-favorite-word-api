@@ -13,7 +13,7 @@ def main():
 
 
 @main.command()
-@click.option('--spotify-client-id', prompt='Your SPOTIFY CLIENT ID',  help='Your Spotify Client ID', required=True)
+@click.option('--spotify-client-id', prompt='Your SPOTIFY CLIENT ID', help='Your Spotify Client ID', required=True)
 @click.option('--spotify-client-secret', prompt='Your SPOTIFY CLIENT SECRET', help='Your Spotify Client SECRET', required=True)
 @click.option('--genius-access-token', prompt='Your Genius ACCESS SECRET', help='Your Genius ACCESS SECRET', required=True)
 def config_credentials(spotify_client_id, spotify_client_secret, genius_access_token):
@@ -48,4 +48,3 @@ def get_top_words(artist, n_top_words):
         click.secho(f'No artist were found with this name: {artist}', fg='red')
     except exceptions.LyricsNotFound:
         click.secho(f'No lyrics were found with this artist: {artist}', fg='red')
-

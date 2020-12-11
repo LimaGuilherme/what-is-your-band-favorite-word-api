@@ -109,4 +109,3 @@ class TestRunTimeTopWordsService(TestCase):
 
         with self.assertRaises(exceptions.LyricsNotFound):
             self.runtime_words_service.count_frequency('Semper Soma', 10)
-

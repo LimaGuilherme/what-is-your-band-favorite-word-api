@@ -4,7 +4,7 @@ from unittest import TestCase
 
 from click.testing import CliRunner
 
-from src.lyrics.cli_commands import config_credentials, get_top_words
+from src.lyrics.cli_commands import config_credentials
 
 
 class TestCLI(TestCase):
