@@ -1,7 +1,14 @@
+import re
+
 import spotipy
 
 from typing import List
 from spotipy.oauth2 import SpotifyClientCredentials
+
+
+UNACCEPTABLE_ALBUMS = ['instrumental', 'international', 'live', 'version',
+                       'limited', 'mtv', 'bonus', 'tour', 'anniversary', 'standard', 'track',
+                       'exclusive', 'gold', 'edition', 'commentary', 'remaster', 'acoustic', 'soundtrack']
 
 
 class AlbumsSearcher:
@@ -13,18 +20,14 @@ class AlbumsSearcher:
 
     def remove_remaster_and_live_albums(self, albums: List[str]) -> List[str]:
         acceptable_albums = []
-        unacceptable_albums = ['instrumental', 'international', 'live', 'version',
-                               'limited', 'mtv', 'bonus', 'tour', 'anniversary', 'standard', 'track',
-                               'exclusive', 'gold', 'edition', 'commentary', 'remaster', 'acoustic']
+
         for album in albums:
             this_album_album_is_acceptable = True
-            album = album.replace('(', '')
-            album = album.replace(')', '')
-
+            album = re.sub(r'\W+', ' ', album)
             album_title = album.split(sep=" ")
 
             for album_tittles in album_title:
-                if album_tittles.lower() in unacceptable_albums:
+                if album_tittles.lower() in UNACCEPTABLE_ALBUMS:
                     this_album_album_is_acceptable = False
                     break
 

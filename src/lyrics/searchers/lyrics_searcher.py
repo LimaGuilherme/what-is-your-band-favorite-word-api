@@ -61,21 +61,30 @@ class LyricsSearcher:
         albums = self.albums_searcher.get_albums(artist)
 
         albums = self.albums_searcher.remove_remaster_and_live_albums(albums)
-        albums_to_tracks = {}
         track_lyrics = []
 
-        for album in albums:
-            if not albums_to_tracks.get(album):
-                albums_to_tracks[album] = []
-            albums_to_tracks[album] = self.track_searcher.get_tracks(album)
+        albums_to_tracks = self.__get_tracks_for(albums)
 
+        self.__search_lyrics(albums_to_tracks, artist, track_lyrics)
+
+        return track_lyrics
+
+    def __search_lyrics(self, albums_to_tracks, artist, track_lyrics):
         for album, tracks in albums_to_tracks.items():
             for track in tracks:
-
                 lyrics = self.get_breno(artist, track)
 
                 if not lyrics:
                     continue
+
                 track_lyrics.append(Lyrics(artist=artist, album=album, track=track, lyrics=lyrics))
 
-        return track_lyrics
+    def __get_tracks_for(self, albums):
+        albums_to_tracks = {}
+
+        for album in albums:
+            if not albums_to_tracks.get(album):
+                albums_to_tracks[album] = []
+
+            albums_to_tracks[album] = self.track_searcher.get_tracks(album)
+        return albums_to_tracks

@@ -24,7 +24,8 @@ class TestAlbumsSearcher(TestCase):
                                   'Infections Of A Different Kind',
                                   'Infections of a Different Kind (Step I)',
                                   'Infections of a Different Kind Step 1',
-                                  'Infections Of A Different Kind – Step 1'])
+                                  'Infections Of A Different Kind – Step 1',
+                                  'WolfWalkers (Original Motion Picture Soundtrack)'])
         self.assertIsInstance(albums, list)
 
     def test_should_raise_albums_not_found(self):
